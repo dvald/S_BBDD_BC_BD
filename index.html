@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Demos de Seguridad en Bases de Datos, Blockchain y Big Data, del Grado en Ciberseguridad de UNIR. Explora fundamentos, directrices y seguridad del almacenamiento con el caso CosechaDirecta.">
+  <meta name="theme-color" content="#101c30">
+  <title>Seguridad en Bases de Datos, Blockchain y Big Data · Demos</title>
+  <link rel="icon" href="comun/icono.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="comun/portada.css">
+</head>
+<body>
+  <a class="saltar" href="#demos">Saltar a las demos</a>
+  <header class="cabecera">
+    <div class="marca"><img src="comun/icono.svg" width="36" height="36" alt=""><span>UNIR <span class="separador">/</span> Grado en Ciberseguridad</span></div>
+    <nav aria-label="Navegación de la portada"><a href="#demos">Demos</a><a href="#recorrido">La asignatura</a><a href="#uso">Cómo explorar</a></nav>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="titulo">
+      <div class="hero-texto">
+        <p class="eyebrow">Laboratorio visual · 4.º curso</p>
+        <h1 id="titulo">Seguridad en<br>Bases de Datos,<br><span>Blockchain</span><br>y Big Data</h1>
+        <p class="entradilla">Entender el riesgo. Elegir el control.<br>Comprobar qué cambia.</p>
+        <p class="intro">Del acceso a un dato a la confianza en un sistema distribuido. Explora casos, cambia decisiones y observa sus consecuencias.</p>
+        <div class="acciones"><a class="boton" href="01_fundamentos_directrices.html">Empezar por el tema 1 <span aria-hidden="true">↗</span></a><a class="enlace-claro" href="#demos">Ver las demos <span aria-hidden="true">↓</span></a></div>
+        <p class="hero-nota">2 temas disponibles <span aria-hidden="true">·</span> 12 apartados interactivos <span aria-hidden="true">·</span> Datos ficticios</p>
+      </div>
+      <figure class="cadena">
+        <div class="cadena-cab"><span class="punto"></span> El dato deja huella <span class="mono">01 — 03</span></div>
+        <svg viewBox="0 0 520 420" role="img" aria-labelledby="cadena-titulo cadena-desc">
+          <title id="cadena-titulo">Una cadena de bloques conectados por hashes</title>
+          <desc id="cadena-desc">Tres bloques enlazados. Cada bloque posterior referencia el hash del anterior. El esquema representa el vínculo entre datos e integridad.</desc>
+          <defs>
+            <pattern id="rejilla" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#43556e"/></pattern>
+          </defs>
+          <rect width="520" height="420" fill="url(#rejilla)"/>
+          <g fill="none" stroke="#526c91" stroke-width="1.4"><path d="M65 117 30 140v140l115 66 146-85 161 92 43-24V163l-76-43"/><path d="m30 280 124-72 116 66 149-86"/></g>
+          <g fill="#8bd8ec"><circle cx="30" cy="140" r="4"/><circle cx="30" cy="280" r="4"/><circle cx="455" cy="329" r="4"/><circle cx="419" cy="120" r="4"/></g>
+          <g stroke="#68bada" stroke-width="2" stroke-linejoin="round">
+            <path d="m64 150 61-35 61 35-61 36z" fill="#224567"/><path d="m64 150 61 36v70l-61-36z" fill="#172f4b"/><path d="m125 186 61-36v70l-61 36z" fill="#1d3c59"/>
+            <path d="m91 144 28-16m-28 26 36-20" stroke="#92def0"/>
+          </g>
+          <path d="m186 197 26 15 22-13" fill="none" stroke="#c7a0ed" stroke-width="3"/>
+          <g stroke="#bd92e7" stroke-width="2" stroke-linejoin="round">
+            <path d="m203 182 61-35 61 35-61 36z" fill="#513b72"/><path d="m203 182 61 36v70l-61-36z" fill="#342948"/><path d="m264 218 61-36v70l-61 36z" fill="#443259"/>
+            <path d="m230 176 28-16m-28 26 36-20" stroke="#d4b4f3"/>
+          </g>
+          <path d="m325 229 26-15 25 14" fill="none" stroke="#c7a0ed" stroke-width="3"/>
+          <g stroke="#82c9c3" stroke-width="2" stroke-linejoin="round">
+            <path d="m342 150 61-35 61 35-61 36z" fill="#29545a"/><path d="m342 150 61 36v70l-61-36z" fill="#203b46"/><path d="m403 186 61-36v70l-61 36z" fill="#28505a"/>
+            <path d="m369 144 28-16m-28 26 36-20" stroke="#a3e6dd"/>
+          </g>
+          <g fill="#dce6f4" font-family="monospace" font-size="13"><text x="77" y="285">BLOQUE 01</text><text x="215" y="318">BLOQUE 02</text><text x="354" y="285">BLOQUE 03</text></g>
+          <g fill="#a0b4cf" font-family="monospace" font-size="12"><text x="75" y="80">DATOS + HASH</text><text x="294" y="369">REFERENCIA AL ANTERIOR</text></g>
+          <path d="M185 85h80v44" fill="none" stroke="#657e9f" stroke-dasharray="3 4"/><path d="M334 352v-47" fill="none" stroke="#657e9f" stroke-dasharray="3 4"/>
+        </svg>
+        <figcaption><strong>Integridad conectada.</strong> Salvo el primero, cada bloque referencia el hash del anterior. Las reglas de validación y consenso completan el modelo. <a href="https://csrc.nist.gov/pubs/ir/8202/final">NIST · Blockchain Technology Overview</a>.</figcaption>
+      </figure>
+    </section>
+
+    <section class="zona demos" id="demos" aria-labelledby="demos-titulo">
+      <div class="titulo-seccion"><div><p class="eyebrow">Explorar y comprobar</p><h2 id="demos-titulo">Las demos de la asignatura</h2></div><p>Un caso común: <strong>CosechaDirecta</strong>.<br>Dos formas de mirar la seguridad del dato.</p></div>
+      <div class="temas">
+        <article class="tema">
+          <div class="tema-arriba"><span class="numero">01</span><span class="disponible">Demo disponible</span></div>
+          <p class="tema-etiqueta">Fundamentos y marco normativo</p>
+          <h3><a href="01_fundamentos_directrices.html">¿Cómo establecemos las directrices de ciberseguridad?</a></h3>
+          <p>Clasifica la información, observa una inyección SQL y convierte un riesgo en una directriz que pueda comprobarse.</p>
+          <ol class="apartados" aria-label="Apartados del tema 1">
+            <li><a href="01_fundamentos_directrices.html#clasificar"><span>01</span>Clasificar <span aria-hidden="true">↗</span></a></li>
+            <li><a href="01_fundamentos_directrices.html#integridad"><span>02</span>Integridad <span aria-hidden="true">↗</span></a></li>
+            <li><a href="01_fundamentos_directrices.html#inyeccion"><span>03</span>Inyección SQL <span aria-hidden="true">↗</span></a></li>
+            <li><a href="01_fundamentos_directrices.html#permisos"><span>04</span>Permisos y registros <span aria-hidden="true">↗</span></a></li>
+            <li><a href="01_fundamentos_directrices.html#riesgo"><span>05</span>Riesgo <span aria-hidden="true">↗</span></a></li>
+            <li><a href="01_fundamentos_directrices.html#plazos"><span>06</span>Plazos <span aria-hidden="true">↗</span></a></li>
+            <li><a href="01_fundamentos_directrices.html#directriz"><span>07</span>Directriz <span aria-hidden="true">↗</span></a></li>
+          </ol>
+          <a class="abrir" href="01_fundamentos_directrices.html">Abrir tema 1 <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="tema tema-dos">
+          <div class="tema-arriba"><span class="numero">02</span><span class="disponible">Demo disponible</span></div>
+          <p class="tema-etiqueta">Arquitectura y vulnerabilidades en almacenamiento</p>
+          <h3><a href="02_almacenamiento_acceso.html">¿Cómo protegemos la ruta hasta el dato?</a></h3>
+          <p>Compara objetos, archivos y bloques. Cambia los controles de acceso y comprueba qué solicitudes llegan al almacenamiento.</p>
+          <ol class="apartados" aria-label="Apartados del tema 2">
+            <li><a href="02_almacenamiento_acceso.html#ruta"><span>01</span>Ruta hasta el dato <span aria-hidden="true">↗</span></a></li>
+            <li><a href="02_almacenamiento_acceso.html#modalidades"><span>02</span>Objetos, archivos y bloques <span aria-hidden="true">↗</span></a></li>
+            <li><a href="02_almacenamiento_acceso.html#acceso"><span>03</span>Antes y después <span aria-hidden="true">↗</span></a></li>
+            <li><a href="02_almacenamiento_acceso.html#config"><span>04</span>Configuración y deriva <span aria-hidden="true">↗</span></a></li>
+            <li><a href="02_almacenamiento_acceso.html#ejercicio"><span>05</span>Ejercicio: las copias <span aria-hidden="true">↗</span></a></li>
+          </ol>
+          <a class="abrir" href="02_almacenamiento_acceso.html">Abrir tema 2 <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+    </section>
+
+    <section class="recorrido" id="recorrido" aria-labelledby="recorrido-titulo">
+      <div class="zona">
+        <div class="titulo-seccion"><div><p class="eyebrow">La visión completa</p><h2 id="recorrido-titulo">Del dato al sistema distribuido</h2></div><p>Cuatro bloques conectan los diez temas.<br>Por ahora puedes explorar las demos de los temas 1 y 2.</p></div>
+        <ol class="bloques">
+          <li><span class="rango">Temas 1–4</span><h3>Datos y almacenamiento</h3><p>Fundamentos, marco normativo, arquitectura y seguridad en bases de datos relacionales y NoSQL.</p><span class="situacion">Demos de los temas 1 y 2 disponibles</span></li>
+          <li class="cripto"><span class="rango">Tema 5</span><h3>Criptografía</h3><p>Mecanismos para proteger la información en tránsito y en reposo, y gestionar sus claves.</p><span class="situacion">Sin demo todavía</span></li>
+          <li class="blockchain"><span class="rango">Temas 6–8</span><h3>Blockchain</h3><p>Bloques, consenso, vulnerabilidades y seguridad de los contratos inteligentes.</p><span class="situacion">Sin demo todavía</span></li>
+          <li class="bigdata"><span class="rango">Temas 9–10</span><h3>Big Data</h3><p>Riesgos de las arquitecturas de datos, privacidad y cumplimiento en su tratamiento.</p><span class="situacion">Sin demo todavía</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="zona uso" id="uso" aria-labelledby="uso-titulo">
+      <div><p class="eyebrow">Antes de empezar</p><h2 id="uso-titulo">Pregunta, prueba, explica.</h2><p>Elige un apartado, anticipa el resultado y modifica una decisión. Después, explica qué control ha cambiado el acceso o reducido el riesgo.</p></div>
+      <div class="guia">
+        <details><summary>Moverse por las demos</summary><p>La barra superior permite volver al índice y cambiar de tema. Dentro de cada demo, usa las pestañas o las teclas <kbd>1</kbd>–<kbd>7</kbd>; <kbd>←</kbd> y <kbd>→</kbd> avanzan por los pasos. <kbd>?</kbd> muestra los atajos y <strong>A− / A+</strong> ajusta la letra.</p></details>
+        <details><summary>Qué representan los resultados</summary><p>CosechaDirecta es un caso ficticio. Las demos combinan cálculos en el navegador, resultados precalculados con Python y simulaciones didácticas. El botón <strong>i</strong> de cada apartado explica su procedencia. Un resultado del simulador no acredita la seguridad de un sistema real.</p></details>
+        <details><summary>Usarlas sin conexión</summary><p>Abre <strong>index.html</strong> desde la carpeta completa. Las demos funcionan en el navegador, sin instalar bibliotecas ni conectarse a servicios. Los enlaces a fuentes externas requieren conexión.</p></details>
+      </div>
+    </section>
+  </main>
+  <footer class="pie"><span>Seguridad en Bases de Datos, Blockchain y Big Data</span><span>UNIR · Grado en Ciberseguridad</span><a href="#titulo">Volver arriba ↑</a></footer>
+</body>
+</html>

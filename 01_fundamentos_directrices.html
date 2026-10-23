@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase 2 · Fundamentos y directrices · Seguridad en Bases de Datos, Blockchain y Big Data</title>
+<meta name="description" content="Laboratorio del tema 1: clasificación de datos, integridad, inyección SQL, permisos, riesgos y directrices de ciberseguridad con el caso ficticio CosechaDirecta.">
+<link rel="icon" href="comun/icono.svg" type="image/svg+xml">
+<link rel="stylesheet" href="comun/clase.css">
+<style>
+  /* 1 · clasificar */
+  .dato-grande { font-size: 1.6rem; font-weight: 800; }
+  .dato-donde { font-size: .95rem; color: var(--ink2); font-weight: 600; margin-left: .4rem; }
+  .votos .chip { min-width: 9rem; font-weight: 700; }
+  .nivel { display: inline-block; font-weight: 800; padding: .05rem .55rem; border-radius: 6px; }
+  .nivel.Público { background: #E8F5E9; color: #1B5E20; }
+  .nivel.Interno { background: #E3F2FD; color: #0D47A1; }
+  .nivel.Confidencial { background: #FFF3E0; color: #8A4B00; }
+  .nivel.Secreto { background: #FFEBEE; color: #8E1B1B; }
+  /* 2 · integridad */
+  .hash { font-family: Menlo, Consolas, monospace; font-size: 1.02rem; word-break: break-all; padding: .5rem .7rem; background: var(--soft); border: 1px solid var(--line); border-radius: 8px; }
+  .hash .d { background: #FFD54F; border-radius: 2px; }
+  .estado-grande { font-size: 1.25rem; font-weight: 800; margin: .5rem 0; }
+  .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+  .tres > div { border: 1px solid var(--line); border-radius: 10px; padding: .7rem .9rem; background: #fff; }
+  .tres b { display: block; font-size: 1.05rem; margin-bottom: .2rem; }
+  /* 3 · inyección */
+  #inj-texto { width: min(100%, 40rem); font-family: Menlo, Consolas, monospace; font-size: 1.05rem; }
+  .modos .chip { font-weight: 700; }
+  /* 4 · permisos */
+  td.sobra { outline: 2px solid var(--bad); outline-offset: -3px; border-radius: 4px; }
+  /* 5 · riesgo */
+  .riesgo-wrap { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 1.2rem; align-items: start; }
+  .riesgo-wrap svg { width: 100%; max-height: 66vh; display: block; }
+  .plazos-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr); gap: 1rem; align-items: start; }
+  .marca { cursor: pointer; }
+  .marca circle { stroke: #fff; stroke-width: 3; }
+  .marca.sel circle { stroke: var(--bigd); stroke-width: 5; }
+  .cadena { display: grid; grid-template-columns: 9.5rem 1fr; gap: .25rem .8rem; margin: .5rem 0; }
+  .cadena dt { font-weight: 800; color: var(--ink2); }
+  .ctrl-r { border: 1px solid var(--line); border-radius: 8px; padding: .5rem .7rem; margin: .4rem 0; }
+  .ctrl-r .eje { font-weight: 800; }
+  /* 6 · plazos */
+  .plazo-fecha { font-weight: 800; }
+  /* 7 · directriz */
+  .form-dir { display: grid; grid-template-columns: 9rem 1fr; gap: .45rem .8rem; align-items: start; }
+  .form-dir label { font-weight: 700; padding-top: .4rem; }
+  .form-dir textarea { min-height: 2.6rem; }
+  .criterio { display: grid; grid-template-columns: 8.5rem 6.5rem 1fr; gap: .6rem; align-items: center; padding: .35rem 0; border-bottom: 1px solid var(--line); }
+  .vista-dir { border: 2px solid var(--ok); border-radius: 10px; padding: .8rem 1rem; background: #fff; }
+  .vista-dir p { margin: .2rem 0; }
+  .reloj { font-variant-numeric: tabular-nums; font-size: 1.6rem; font-weight: 800; min-width: 5.5rem; display: inline-block; }
+  @media (max-width: 1000px) { .riesgo-wrap, .tres, .plazos-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="header">
+  <h1><span class="num">CLASE 2 · TEMA 1</span> ¿Cómo establecemos las directrices de ciberseguridad?</h1>
+  <p>Demostraciones para proyectar con el caso ficticio CosechaDirecta S.L. Funciona sin conexión: abrir este archivo en el navegador.</p>
+</header>
+<nav class="tabs" role="tablist" aria-label="Demostraciones">
+  <button class="tab" role="tab" id="t-clasificar" aria-controls="p-clasificar" aria-selected="true"><span class="tab-n">1</span>Clasificar</button>
+  <button class="tab" role="tab" id="t-integridad" aria-controls="p-integridad" aria-selected="false"><span class="tab-n">2</span>Integridad</button>
+  <button class="tab" role="tab" id="t-inyeccion" aria-controls="p-inyeccion" aria-selected="false"><span class="tab-n">3</span>Inyección SQL</button>
+  <button class="tab" role="tab" id="t-permisos" aria-controls="p-permisos" aria-selected="false"><span class="tab-n">4</span>Permisos y registros</button>
+  <button class="tab" role="tab" id="t-riesgo" aria-controls="p-riesgo" aria-selected="false"><span class="tab-n">5</span>Riesgo</button>
+  <button class="tab" role="tab" id="t-plazos" aria-controls="p-plazos" aria-selected="false"><span class="tab-n">6</span>Plazos</button>
+  <button class="tab" role="tab" id="t-directriz" aria-controls="p-directriz" aria-selected="false"><span class="tab-n">7</span>Directriz</button>
+</nav>
+
+<main class="content">
+
+<!-- ============================================================ 1 · clasificar -->
+<section class="panel active" id="p-clasificar" role="tabpanel" aria-labelledby="t-clasificar">
+  <div class="card">
+    <h2>¿Cuánto vale cada dato?</h2>
+    <div class="meta"><span class="tag illus">Caso ficticio</span><span class="tag">Tema 1 · 1.5 · clasificación de datos (cuatro niveles)</span></div>
+    <p class="small">Los cuatro niveles son la política del caso: la clasificación depende del contexto y del daño. No son categorías legales del RGPD; una copia hereda la sensibilidad de los datos que contiene.</p>
+    <div id="cl-pasos"></div>
+    <div class="pregunta"><span class="dato-grande" id="cl-dato"></span><span class="dato-donde" id="cl-donde"></span></div>
+    <p class="small">Marcad el nivel que vota el grupo en el chat:</p>
+    <div class="row votos" id="cl-votos"></div>
+    <div id="cl-sol"></div>
+  </div>
+  <div class="card">
+    <div class="row" style="justify-content: space-between"><h3 style="margin:0">Lo que llevamos clasificado</h3><span id="cl-boton"></span></div>
+    <table class="t" id="cl-tabla"><thead><tr><th>Dato</th><th>Dónde</th><th>Voto del grupo</th><th>Nivel propuesto</th><th>Por qué</th></tr></thead><tbody></tbody></table>
+    <p class="small" style="margin-top:.6rem" id="cl-niveles"></p>
+  </div>
+</section>
+
+<!-- ============================================================ 2 · integridad -->
+<section class="panel" id="p-integridad" role="tabpanel" aria-labelledby="t-integridad">
+  <div class="card">
+    <h2>¿Lo notaríais si alguien cambia 100 por 1000?</h2>
+    <div class="meta"><span class="tag illus">Datos ficticios</span><span class="tag">Tema 1 · 1.2 · integridad (ejemplo 100 → 1000)</span><span class="tag">SHA-256 calculado en el navegador; igual que shasum, sha256sum o certutil</span></div>
+    <div id="in-pasos"></div>
+    <div class="grid2">
+      <div>
+        <h3>clientes_ficticios.csv <span class="small">(se puede editar)</span></h3>
+        <textarea id="in-csv" class="mono" rows="5" spellcheck="false" aria-label="Contenido del fichero"></textarea>
+      </div>
+      <div>
+        <h3>Resumen guardado el lunes</h3>
+        <div class="hash" id="in-ref"></div>
+        <h3>Resumen calculado ahora</h3>
+        <div class="hash" id="in-calc"></div>
+        <div class="estado-grande" id="in-estado"></div>
+      </div>
+    </div>
+    <div id="in-msg"></div>
+  </div>
+  <div class="card">
+    <h3>En vuestro equipo</h3>
+    <div class="term"><span class="cmd">$ shasum -a 256 clientes_ficticios.csv</span>        <span class="small" style="color:#A9B4BF"># macOS</span>
+<span class="cmd">$ sha256sum clientes_ficticios.csv</span>            <span class="small" style="color:#A9B4BF"># Linux</span>
+<span class="cmd">&gt; certutil -hashfile clientes_ficticios.csv SHA256</span>   <span class="small" style="color:#A9B4BF"># Windows</span></div>
+    <p class="small"><a href="recursos/clientes_ficticios.csv" download>Descargar el CSV original</a>. Los comandos calculan el resumen de sus bytes: cambiar la codificación o los saltos de línea también cambia el resultado.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 3 · inyección -->
+<section class="panel" id="p-inyeccion" role="tabpanel" aria-labelledby="t-inyeccion">
+  <div class="card">
+    <h2>El buscador de productos</h2>
+    <div class="meta"><span class="tag illus">Caso ficticio</span><span class="tag">Tema 1 · 1.3 · inyección SQL y contramedidas</span><span class="tag">A, B y C: resultados precalculados con Python y SQLite en memoria</span></div>
+    <div id="inj-pasos"></div>
+    <div class="row"><label for="inj-texto"><b>Buscar:</b></label><input type="text" id="inj-texto" spellcheck="false" autocomplete="off"></div>
+    <div class="row" id="inj-pre"></div>
+    <div class="row modos" id="inj-modos"></div>
+    <h3>Lo que llega a la base de datos</h3>
+    <div class="term" id="inj-sql"></div>
+    <h3>Resultado</h3>
+    <div class="term" id="inj-res"></div>
+    <div id="inj-msg"></div>
+    <p class="small" id="inj-origen"></p>
+    <p class="small">Ejercicio opcional: <a href="recursos/inyeccion_sqlite.py" download>descargar el script de Python</a>. En macOS/Linux, abre el terminal en la carpeta de descarga y ejecuta <code id="inj-cmd"></code>. En Windows, ejecuta <code>py inyeccion_sqlite.py</code> para recorrer los ejemplos A, B y C. Usa solo datos ficticios en tu equipo; no requiere red ni una base de datos instalada.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 4 · permisos y registros -->
+<section class="panel" id="p-permisos" role="tabpanel" aria-labelledby="t-permisos">
+  <div class="card">
+    <h2>¿Qué puede hacer cada cuenta?</h2>
+    <div class="meta"><span class="tag illus">Caso ficticio</span><span class="tag">Tema 1 · 1.3 · abuso de privilegios; 1.5 · mínimo privilegio</span></div>
+    <div id="pe-pasos"></div>
+    <div class="row modos" id="pe-vista"></div>
+    <table class="t" id="pe-tabla"></table>
+    <p class="small" id="pe-nota"></p>
+  </div>
+  <div class="card">
+    <h2>Registro de accesos a PostgreSQL <span class="small">(simplificado)</span></h2>
+    <div class="pregunta" id="re-pregunta">¿Qué líneas deberían saltar como alerta? ¿Por qué?</div>
+    <table class="t" id="re-tabla"></table>
+    <div id="re-msg"></div>
+  </div>
+</section>
+
+<!-- ============================================================ 5 · riesgo -->
+<section class="panel" id="p-riesgo" role="tabpanel" aria-labelledby="t-riesgo">
+  <div class="card">
+    <h2>Probabilidad × impacto</h2>
+    <div class="meta"><span class="tag illus">Valoraciones supuestas para el caso</span><span class="tag">Tema 1 · 1.3 · matriz de riesgos y defensa en profundidad</span><span class="tag">Escala 1-5 y niveles: convención de la clase</span></div>
+    <div class="row"><span id="ri-pasos"></span><span id="ri-boton"></span></div>
+    <div class="riesgo-wrap">
+      <div><svg id="ri-svg" viewBox="0 0 640 560" role="img" aria-label="Matriz de riesgos de cinco por cinco"></svg></div>
+      <div>
+        <div class="row" id="ri-chips"></div>
+        <div id="ri-detalle"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 6 · plazos -->
+<section class="panel" id="p-plazos" role="tabpanel" aria-labelledby="t-plazos">
+  <div class="card">
+    <h2>El viernes a las 18:00</h2>
+    <div class="meta"><span class="tag illus">Caso ficticio</span><span class="tag">RGPD arts. 33-34 · Directiva (UE) 2022/2555 art. 23 · Res. CD/ANPD 15/2024 arts. 6 y 9</span></div>
+    <p id="pl-escenario"></p>
+    <div id="pl-pasos"></div>
+    <div class="plazos-grid">
+      <div>
+        <div class="row"><label for="pl-fecha"><b>Constancia (Madrid):</b></label><input type="datetime-local" id="pl-fecha" aria-describedby="pl-error"></div>
+        <p id="pl-error" class="small" role="status"></p>
+        <label class="check"><input type="checkbox" id="pl-alto"> Se aprecia alto riesgo para las personas</label>
+        <label class="check"><input type="checkbox" id="pl-inint"> Datos cifrados con una clave no comprometida (ininteligibles)</label>
+        <label class="check"><input type="checkbox" id="pl-improb"> Es improbable que suponga un riesgo para las personas</label>
+        <label class="check"><input type="checkbox" id="pl-brasil"> Aplica la LGPD y puede haber riesgo o daño relevante</label>
+        <label class="check"><input type="checkbox" id="pl-nis2"> Si le aplicara NIS2 y el incidente fuera significativo</label>
+      </div>
+      <div>
+        <table class="t" id="pl-tabla"></table>
+      </div>
+    </div>
+    <div id="pl-msg"></div>
+  </div>
+</section>
+
+<!-- ============================================================ 7 · directriz -->
+<section class="panel" id="p-directriz" role="tabpanel" aria-labelledby="t-directriz">
+  <div class="card">
+    <h2>Una directriz que se pueda comprobar</h2>
+    <div class="meta"><span class="tag illus">Caso ficticio</span><span class="tag">Tema 1 · 1.4 (qué obliga) y 1.5 (buenas prácticas)</span></div>
+    <div class="row" id="di-riesgos"></div>
+    <p id="di-riesgo"></p>
+    <div class="row">
+      <button type="button" class="btn" id="di-vaga">Cargar la frase vaga</button>
+      <button type="button" class="btn" id="di-vaciar">Vaciar</button>
+      <button type="button" class="btn" id="di-modelo">Ver la solución modelo</button>
+      <span style="margin-left:auto"><b>Tiempo:</b> <span class="reloj" id="di-reloj">5:00</span>
+        <button type="button" class="btn" data-min="5">5 min</button><button type="button" class="btn" data-min="3">3 min</button><button type="button" class="btn" id="di-pausa">Iniciar</button></span>
+    </div>
+    <div class="grid2">
+      <div class="form-dir" id="di-form"></div>
+      <div>
+        <h3 style="margin-top:0">Lista de comprobación</h3>
+        <p class="small">Ayuda orientativa sobre la <b>forma</b> (concreción, responsable, evidencia, trazabilidad). No valida el fondo: una directriz puede salir «bien planteada» en todo y seguir siendo inadecuada o desproporcionada. La valoración final es del docente.</p>
+        <div id="di-check"></div>
+        <h3>Así queda</h3>
+        <div class="vista-dir" id="di-vista"></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<footer>Caso ficticio: empresa, personas, cuentas, direcciones IP (rangos de documentación) y registros inventados. Fuentes: tema 1 de la asignatura (apartados 1.2 a 1.5); <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj?locale=es" target="_blank" rel="noopener">RGPD, arts. 32-34</a>; <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj?locale=es" target="_blank" rel="noopener">NIS2, art. 23</a>; <a href="https://bibliotecadigital.mj.gov.br/bitstream/1/12879/2/RES_ANPD_2024_15.html" target="_blank" rel="noopener">Resolución CD/ANPD 15/2024, arts. 6 y 9</a>. Enlaces de consulta con conexión. Los resultados preparados de SQL y los resúmenes SHA-256 se generan con Python y se contrastan con JavaScript.</footer>
+
+<script src="comun/clase.js"></script>
+<script src="01_fundamentos_lib.js"></script>
+<script src="01_fundamentos_datos.js"></script>
+<script>
+(function () {
+  "use strict";
+  const D = window.SBD_DATOS, S = window.SBD, esc = Clase.esc;
+  const $ = (id) => document.getElementById(id);
+
+  // ------------------------------------------------------------ pestañas
+  document.querySelectorAll('[role="tab"]').forEach((t) => t.addEventListener("click", () => {
+    document.querySelectorAll('[role="tab"]').forEach((x) => x.setAttribute("aria-selected", String(x === t)));
+    document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === t.getAttribute("aria-controls")));
+  }));
+  function chips(host, opciones, alPulsar) {
+    host.innerHTML = "";
+    const bs = opciones.map(([valor, texto]) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "chip"; b.textContent = texto; b.dataset.v = valor; b.setAttribute("aria-pressed", "false");
+      b.addEventListener("click", () => alPulsar(valor));
+      host.append(b);
+      return b;
+    });
+    return (valor) => bs.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === valor)));
+  }
+  const nivelHTML = (n) => '<span class="nivel ' + esc(n) + '">' + esc(n) + "</span>";
+
+  // ============================================================ 1 · clasificar
+  (function () {
+    const items = D.clasificacion;
+    const votos = {};
+    let k = 0, todas = false;
+    const marcar = chips($("cl-votos"), D.niveles.map(([n]) => [n, n]), (n) => { votos[i()] = n; pintar(); });
+    const i = () => Math.floor(k / 2);
+    function pintar() {
+      const [dato, donde, nivel, porque] = items[i()];
+      $("cl-dato").textContent = dato;
+      $("cl-donde").textContent = "· " + donde;
+      marcar(votos[i()] || "");
+      const visto = k % 2 === 1 || todas;
+      $("cl-sol").innerHTML = visto
+        ? '<div class="okbox"><b>Propuesta: </b>' + nivelHTML(nivel) + " · " + esc(porque) +
+          (votos[i()] && votos[i()] !== nivel ? " <br><b>El grupo votó " + esc(votos[i()]) + ":</b> ¿qué argumento lo sostiene?" : "") + "</div>"
+        : '<div class="info">Pregunta al grupo. La propuesta aparece en el paso siguiente.</div>';
+      const tb = $("cl-tabla").querySelector("tbody");
+      tb.innerHTML = items.map((it, j) => {
+        const ver = todas || k >= 2 * j + 1;
+        return '<tr class="' + (j === i() ? "sel" : "") + '"><td><b>' + esc(it[0]) + "</b></td><td>" + esc(it[1]) + "</td><td>" +
+          (votos[j] ? nivelHTML(votos[j]) : "—") + "</td><td>" + (ver ? nivelHTML(it[2]) : "?") + "</td><td>" + (ver ? esc(it[3]) : "") + "</td></tr>";
+      }).join("");
+    }
+    $("cl-niveles").innerHTML = D.niveles.map(([n, d]) => nivelHTML(n) + " " + esc(d)).join(" · ");
+    const p = Clase.pasos($("cl-pasos"), { total: items.length * 2, pintar: (n) => { k = n; pintar(); },
+      etiqueta: (n) => "Dato " + (Math.floor(n / 2) + 1) + (n % 2 ? " · propuesta" : " · pregunta") });
+    Clase.botonPregunta($("cl-boton"), (on) => { todas = on; pintar(); }, { ver: "Mostrar todas las propuestas", ocultas: "Volver al paso a paso" });
+    Clase.marcarPasoActivo(p);
+  })();
+
+  // ============================================================ 2 · integridad
+  (function () {
+    const csv = $("in-csv");
+    let ref = D.sha_original, ocultarCalc = false;
+    const pasosTxt = [
+      ["Fichero original", '<div class="info">El lunes se guardó una referencia fiable del fichero. Hoy recalculamos el resumen: la comparación permite detectar modificaciones, siempre que la referencia siga protegida.</div>'],
+      ["Ana: 100 → 1000", '<div class="info"><b>Pregunta:</b> alguien cambia un solo dato (100 → 1000). ¿Cuántos de los 64 caracteres del resumen cambiarán?</div>'],
+      ["Resultado", ""],
+      ["Y si también cambia el resumen", '<div class="warnbox"><b>El atacante sustituye también el resumen guardado.</b> Ahora coinciden… y el importe es falso. El resumen solo protege si se guarda donde el atacante no llega o si va firmado.</div>'],
+      ["Qué protege y qué no", '<div class="tres"><div><b>Detecta cambios</b>el resumen (hash), comparado con una referencia fiable. No cifra el fichero ni impide modificarlo.</div><div><b>Restringe cambios</b>los permisos de escritura limitan quién puede modificar; el control de cambios permite revisar y aprobar.</div><div><b>Vincula a una clave</b>la firma digital permite comprobar integridad y origen. Atribuirla a una persona exige validar su clave pública y proteger la privada.</div></div>'],
+    ];
+    function calcular() {
+      const h = S.sha256(csv.value);
+      const dif = S.difHex(h, ref);
+      $("in-ref").textContent = ref;
+      $("in-calc").innerHTML = ocultarCalc ? '<span class="oculto">' + h + "</span>" :
+        [...h].map((c, j) => (dif.includes(j) ? '<span class="d">' + c + "</span>" : c)).join("");
+      $("in-estado").innerHTML = ocultarCalc ? "" : (dif.length === 0
+        ? '<span class="est ok">✓ COINCIDE</span>' + (csv.value === D.csv_original ? "" : ' <span class="small">(el fichero no es el original)</span>')
+        : '<span class="est bad">✗ NO COINCIDE</span> <span class="small">' + dif.length + " de 64 caracteres distintos</span>");
+      return dif.length;
+    }
+    csv.addEventListener("input", calcular);
+    const p = Clase.pasos($("in-pasos"), { total: pasosTxt.length, etiqueta: (n) => pasosTxt[n][0], pintar: (n) => {
+      csv.value = n === 0 ? D.csv_original : D.csv_modificado;
+      ref = n >= 3 ? D.sha_modificado : D.sha_original;
+      ocultarCalc = n === 1;
+      const nd = calcular();
+      $("in-msg").innerHTML = n === 2
+        ? '<div class="badbox"><b>Ha cambiado un dato y el resumen es otro por completo (' + nd + " de 64 caracteres).</b> Se rompe la integridad y lo detectamos comparando con el resumen guardado.</div>"
+        : pasosTxt[n][1];
+    } });
+  })();
+
+  // ============================================================ 3 · inyección
+  (function () {
+    const txt = $("inj-texto");
+    let modo = "vulnerable", ocultar = false;
+    const nombresModo = { vulnerable: "Vulnerable (concatena)", parametrizada: "Parametrizada", minimo: "Cuenta con permisos mínimos" };
+    const marcarModo = chips($("inj-modos"), Object.keys(D.modos).map((m) => [m, nombresModo[m]]), (m) => { modo = m; ocultar = false; pintar(); });
+    const pre = $("inj-pre");
+    D.entradas.forEach(([id, texto, desc]) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "btn"; b.innerHTML = "<b>" + id + "</b> · " + esc(desc);
+      b.addEventListener("click", () => { txt.value = texto; ocultar = false; pintar(); });
+      pre.append(b);
+    });
+    txt.addEventListener("input", () => { ocultar = false; pintar(); });
+    const fmt = (v) => (typeof v === "number" ? v.toFixed(2) : esc(v));
+    function pintar(msg) {
+      marcarModo(modo);
+      const r = S.buscar(txt.value, modo, D);
+      if (modo === "parametrizada") {
+        $("inj-sql").innerHTML = '<span class="cmd">' + esc(r.sql) + "</span>\nParámetro: <mark>" + esc(JSON.stringify(r.parametro)) + "</mark>  (se compara como texto; nunca se ejecuta)";
+      } else {
+        const [a, b] = S.SQL_VULNERABLE.split("{texto}");
+        $("inj-sql").innerHTML = '<span class="cmd">' + esc(a) + "</span><mark>" + esc(txt.value) + '</mark><span class="cmd">' + esc(b) + "</span>";
+      }
+      let res;
+      if (r.error) res = '<span class="err">ERROR  ' + esc(r.error) + "</span>";
+      else if (r.filas === null) res = '<span class="err">' + esc(r.aviso) + "</span>";
+      else res = '<span class="ok">' + r.filas.length + " fila(s)</span>" + (r.filas.length ? "\n" + r.filas.map((f) => f.map(fmt).join("  |  ")).join("\n") : "");
+      $("inj-res").innerHTML = ocultar ? '<span class="oculto">' + res + "</span>" : res;
+      const entreComillasShell = (v) => "'" + v.replace(/'/g, "'\\''") + "'";
+      $("inj-cmd").textContent = "python3 inyeccion_sqlite.py --modo " + modo + " --entrada " + entreComillasShell(txt.value);
+      $("inj-origen").textContent = r.origen === "python"
+        ? "Resultado preparado mediante ejecución real de SQLite. El navegador muestra los datos guardados; no ejecuta SQL."
+        : r.origen === "emulado"
+          ? "Resultado simulado en el navegador: se reproduce LIKE de SQLite. Los comodines % y _ siguen activos incluso con parámetros; parametrizar impide interpretar la entrada como código SQL."
+          : "Esta entrada requiere ejecutar el script para conocer el resultado real; el navegador no interpreta SQL arbitraria.";
+      $("inj-msg").innerHTML = msg || "";
+    }
+    const PASOS = [
+      ["A · normal", "A", "vulnerable", false, '<div class="info">Una búsqueda normal: la web pega el texto dentro de la sentencia y la base de datos devuelve los productos.</div>'],
+      ["B · predicción", "B", "vulnerable", true, '<div class="info"><b>Pregunta:</b> fijaos en la SQL que llega. ¿Qué devolverá?</div>'],
+      ["B · resultado", "B", "vulnerable", false, '<div class="badbox">La comilla cierra el texto, <code>OR 1=1</code> hace la condición siempre cierta y <code>--</code> comenta el resto: sale todo el catálogo.</div>'],
+      ["C · predicción", "C", "vulnerable", true, '<div class="info"><b>Pregunta:</b> ahora el texto añade un UNION con otra tabla. ¿Qué aparecerá en un buscador de productos?</div>'],
+      ["C · resultado", "C", "vulnerable", false, '<div class="badbox">Correos y nombres de clientes en el buscador de productos: se rompe la <b>confidencialidad</b>.</div>'],
+      ["C · parametrizada", "C", "parametrizada", false, '<div class="okbox">La sentencia y el dato viajan por separado: esta entrada se usa como patrón de búsqueda y no coincide con ningún producto. <b>La inyección deja de funcionar.</b> Los comodines de LIKE siguen teniendo su función.</div>'],
+      ["C · permisos mínimos", "C", "minimo", false, '<div class="okbox">La consulta sigue siendo vulnerable, pero solo se permite leer productos: <b>SQLite rechaza el acceso a clientes</b> mediante el autorizador del script (SQLite no tiene cuentas de usuario). En PostgreSQL se concedería <code>GRANT SELECT ON productos TO app_web;</code> a un rol sin privilegios sobrantes: GRANT añade permisos, no retira los que ya tuviera.</div>'],
+      ["B · permisos mínimos", "B", "minimo", false, '<div class="warnbox">Con permisos mínimos, la entrada B <b>sigue saliendo entera</b>: el mínimo privilegio no evita la inyección, <b>limita el daño</b>. Por eso hacen falta las dos capas.</div>'],
+    ];
+    Clase.pasos($("inj-pasos"), { total: PASOS.length, etiqueta: (n) => PASOS[n][0], pintar: (n) => {
+      const [, id, m, oc, msg] = PASOS[n];
+      txt.value = D.entradas.find((e) => e[0] === id)[1];
+      modo = m; ocultar = oc;
+      pintar(msg);
+    } });
+  })();
+
+  // ============================================================ 4 · permisos y registros
+  (function () {
+    let vista = "hoy", alertas = false;
+    const marcar = chips($("pe-vista"), [["hoy", "Hoy"], ["minimo", "Con mínimo privilegio"]], (v) => { vista = v; pintar(); });
+    const celda = (v) => (v === "sí" ? '<span class="est warn">sí</span>' : v === "no" ? '<span class="est na">no</span>' : '<span class="est ok">' + esc(v) + "</span>");
+    function pintar() {
+      marcar(vista);
+      const cols = D.permisos_columnas;
+      let h = "<thead><tr><th>Cuenta</th>" + cols.map((c) => '<th class="c">' + esc(c) + "</th>").join("") + "</tr></thead><tbody>";
+      for (const [cuenta, [desc, hoy, min]] of Object.entries(D.permisos)) {
+        const v = vista === "hoy" ? hoy : min;
+        h += "<tr><td><b class=\"mono\">" + esc(cuenta) + "</b><br><span class=\"small\">" + esc(desc) + "</span></td>" +
+          v.map((x, j) => '<td class="c' + (vista === "hoy" && hoy[j] === "sí" && min[j] !== "sí" ? " sobra" : "") + '">' + celda(x) + "</td>").join("") + "</tr>";
+      }
+      $("pe-tabla").innerHTML = h + "</tbody>";
+      $("pe-nota").innerHTML = vista === "hoy"
+        ? "Recuadro rojo: permiso que sobra para la tarea de esa cuenta. <b>soporte_ext</b> es administradora permanente y sin MFA."
+        : "Cada cuenta conserva solo lo que necesita. El soporte entra con un acceso <b>temporal</b>, aprobado, con MFA y registrado. La exportación masiva se restringe a tareas autorizadas: permitir SELECT también permite copiar los datos que se pueden leer.";
+      $("re-tabla").innerHTML = "<thead><tr><th>Fecha y hora</th><th>Cuenta</th><th>Origen</th><th>Operación</th><th>Objeto</th><th class=\"c\">Filas</th></tr></thead><tbody>" +
+        D.registro.map((r) => '<tr class="' + (alertas && r[6] ? "alerta" : "") + '"><td class="mono">' + esc(r[0]) + '</td><td class="mono">' + esc(r[1]) +
+          '</td><td class="mono">' + esc(r[2]) + "</td><td>" + esc(r[3]) + "</td><td>" + esc(r[4]) + '</td><td class="c">' + esc(r[5]) + "</td></tr>").join("") + "</tbody>";
+      $("re-msg").innerHTML = alertas
+        ? '<div class="badbox"><b>Alerta en las dos líneas de soporte_ext:</b> ' + D.alerta_motivos.map(esc).join("; ") +
+          '.<br>La copia de las 23:30 también lee todas las tablas, pero es la cuenta y el horario previstos: <b>el volumen solo no basta, cuenta el contexto</b>.</div>'
+        : "";
+    }
+    const PASOS = [["Hoy", "hoy", false], ["Mínimo privilegio", "minimo", false], ["Registro · pregunta", "hoy", false], ["Registro · alertas", "hoy", true]];
+    Clase.pasos($("pe-pasos"), { total: PASOS.length, etiqueta: (n) => PASOS[n][0], pintar: (n) => {
+      vista = PASOS[n][1]; alertas = PASOS[n][2]; pintar();
+      if (n >= 2) $("re-pregunta").scrollIntoView({ behavior: "smooth", block: "start" });
+    } });
+  })();
+
+  // ============================================================ 5 · riesgo
+  (function () {
+    const svg = $("ri-svg");
+    const R = D.riesgos, ids = Object.keys(R);
+    const aplicado = {};          // id -> Set de índices de control aplicados
+    let sel = "R2", ocultarEje = false, todos = true;
+    const X0 = 110, Y0 = 20, CW = 100, CH = 92;
+    const colorNivel = { Bajo: "#E3F2E6", Medio: "#FFF3C4", Alto: "#FFD8A8", "Crítico": "#F8C1C1" };
+    const pos = (id) => {
+      let p = R[id].p, i = R[id].i;
+      (aplicado[id] || new Set()).forEach((k) => { const [, eje, v] = R[id].controles[k]; if (eje === "p") p = Math.min(p, v); else i = Math.min(i, v); });
+      return { p, i };
+    };
+    function dibujarMatriz() {
+      svg.innerHTML = "";
+      for (let p = 1; p <= 5; p++) for (let i = 1; i <= 5; i++) {
+        const x = X0 + (i - 1) * CW, y = Y0 + (5 - p) * CH;
+        svg.append(Clase.svg("rect", { x, y, width: CW - 4, height: CH - 4, rx: 6, fill: colorNivel[S.nivelRiesgo(p * i)] }));
+        svg.append(Clase.svg("text", { x: x + CW - 12, y: y + CH - 12, "text-anchor": "end", "font-size": 14, fill: "#7A848E" }, String(p * i)));
+      }
+      const ejeP = ["rara", "poco prob.", "posible", "probable", "casi segura"], ejeI = ["mínimo", "bajo", "medio", "alto", "grave"];
+      for (let k = 1; k <= 5; k++) {
+        svg.append(Clase.svg("text", { x: X0 - 10, y: Y0 + (5 - k) * CH + CH / 2, "text-anchor": "end", "font-size": 15, fill: "#52606D" }, k + " " + ejeP[k - 1]));
+        svg.append(Clase.svg("text", { x: X0 + (k - 1) * CW + CW / 2 - 2, y: Y0 + 5 * CH + 22, "text-anchor": "middle", "font-size": 15, fill: "#52606D" }, k + " " + ejeI[k - 1]));
+      }
+      svg.append(Clase.svg("text", { x: X0 + 2.5 * CW, y: Y0 + 5 * CH + 50, "text-anchor": "middle", "font-size": 17, "font-weight": 700, fill: "#1F2933" }, "Impacto →"));
+      svg.append(Clase.svg("text", { x: 18, y: Y0 + 2.5 * CH, "text-anchor": "middle", "font-size": 17, "font-weight": 700, fill: "#1F2933", transform: "rotate(-90 18 " + (Y0 + 2.5 * CH) + ")" }, "Probabilidad →"));
+      const celdas = {}, centro = {};
+      const movido = (aplicado[sel] || new Set()).size > 0;
+      ids.forEach((id) => { const q = pos(id); const key = q.p + "-" + q.i; (celdas[key] = celdas[key] || []).push(id); });
+      if (movido) { const key = R[sel].p + "-" + R[sel].i; (celdas[key] = celdas[key] || []).push("antes"); }
+      for (const [key, lista] of Object.entries(celdas)) {
+        const [p, i] = key.split("-").map(Number);
+        const visibles = lista.filter((id) => todos || id === sel || id === "antes");
+        visibles.forEach((id, j) => {
+          const n = visibles.length, dx = (j - (n - 1) / 2) * 42;
+          const cx = X0 + (i - 1) * CW + CW / 2 - 2 + dx, cy = Y0 + (5 - p) * CH + CH / 2 - 2;
+          centro[id] = [cx, cy];
+          if (id === "antes") {
+            svg.append(Clase.svg("circle", { cx, cy, r: 19, fill: "#fff", stroke: "#1F2933", "stroke-dasharray": "4 4", "stroke-width": 2 }));
+            svg.append(Clase.svg("text", { x: cx, y: cy + 5, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: "#52606D" }, "antes"));
+            return;
+          }
+          const g = Clase.svg("g", { class: "marca anima" + (id === sel ? " sel" : ""), tabindex: 0, role: "button", "aria-label": id + " " + R[id].nombre });
+          g.append(Clase.svg("circle", { cx, cy, r: 19, fill: id === sel ? "#1F2933" : "#52606D" }));
+          g.append(Clase.svg("text", { x: cx, y: cy + 6, "text-anchor": "middle", "font-size": 16, "font-weight": 800, fill: "#fff" }, id));
+          g.addEventListener("click", () => { sel = id; todos = true; pintar(); });
+          g.addEventListener("keydown", (e) => {
+            if (e.key !== "Enter" && e.key !== " ") return;
+            e.preventDefault(); sel = id; todos = true; pintar();
+            svg.querySelector('[aria-label="' + id + " " + R[id].nombre + '"]')?.focus();
+          });
+          svg.append(g);
+        });
+      }
+      if (movido && centro.antes && centro[sel]) {    // flecha de la posición anterior a la nueva
+        const [x1, y1] = centro.antes, [x2, y2] = centro[sel];
+        const L = Math.hypot(x2 - x1, y2 - y1), ux = (x2 - x1) / L, uy = (y2 - y1) / L;
+        svg.insertBefore(Clase.svg("line", { x1: x1 + ux * 21, y1: y1 + uy * 21, x2: x2 - ux * 23, y2: y2 - uy * 23, stroke: "#F57C00", "stroke-width": 3, "stroke-dasharray": "6 4" }), svg.querySelector(".marca"));
+      }
+    }
+    const marcarChip = chips($("ri-chips"), ids.map((id) => [id, id]), (id) => { sel = id; todos = true; pintar(); });
+    function pintar() {
+      marcarChip(sel);
+      dibujarMatriz();
+      const r = R[sel], q = pos(sel), v = q.p * q.i, v0 = r.p * r.i;
+      let h = "<h3>" + esc(sel) + " · " + esc(r.nombre) + "</h3><dl class=\"cadena\">" +
+        "<dt>Activo</dt><dd>" + esc(r.activo) + "</dd><dt>Amenaza</dt><dd>" + esc(r.amenaza) + "</dd>" +
+        "<dt>Vulnerabilidad</dt><dd>" + esc(r.vulnerabilidad) + "</dd>" +
+        "<dt>Riesgo</dt><dd><b>" + q.p + " × " + q.i + " = " + v + "</b> · " + esc(S.nivelRiesgo(v)) +
+        (v !== v0 ? ' <span class="small">(antes ' + v0 + " · " + esc(S.nivelRiesgo(v0)) + ")</span>" : "") + "</dd></dl><h3>Controles</h3>";
+      r.controles.forEach(([nombre, eje, valor, porque], k) => {
+        const on = (aplicado[sel] || new Set()).has(k);
+        h += '<label class="check ctrl-r"><input type="checkbox" data-k="' + k + '"' + (on ? " checked" : "") + "><span><b>" + esc(nombre) + "</b><br>" +
+          (ocultarEje && !on ? '<span class="small">¿Mueve la probabilidad o el impacto?</span>' :
+            '<span class="eje">' + (eje === "p" ? "↓ probabilidad" : "↓ impacto") + " → " + valor + "</span> · " + esc(porque)) + "</span></label>";
+      });
+      $("ri-detalle").innerHTML = h;
+      $("ri-detalle").querySelectorAll("input[data-k]").forEach((c) => c.addEventListener("change", () => {
+        const set = aplicado[sel] || (aplicado[sel] = new Set());
+        if (c.checked) set.add(+c.dataset.k); else set.delete(+c.dataset.k);
+        pintar();
+      }));
+    }
+    const PASOS = [
+      ["La cadena (R2)", () => { sel = "R2"; todos = false; }],
+      ["Los ocho riesgos", () => { todos = true; }],
+      ["R1 · ¿qué control?", () => { sel = "R1"; todos = true; aplicado.R1 = new Set(); }],
+      ["R1 · bloqueo aplicado", () => { sel = "R1"; todos = true; aplicado.R1 = new Set([0]); }],
+    ];
+    Clase.pasos($("ri-pasos"), { total: PASOS.length, etiqueta: (n) => PASOS[n][0], pintar: (n) => { PASOS[n][1](); pintar(); } });
+    Clase.botonPregunta($("ri-boton"), (on) => { ocultarEje = on; pintar(); }, { ver: "Ocultar qué mueve cada control", ocultas: "Mostrar qué mueve cada control" });
+  })();
+
+  // ============================================================ 6 · plazos
+  (function () {
+    $("pl-escenario").textContent = D.plazos.escenario;
+    const f = $("pl-fecha"), ch = { alto: $("pl-alto"), inint: $("pl-inint"), improb: $("pl-improb"), brasil: $("pl-brasil"), nis2: $("pl-nis2") };
+    let ocultar = false;
+    function pintar(msg) {
+      const validacion = S.validarFecha(f.value);
+      $("pl-error").textContent = validacion.error || "";
+      f.setAttribute("aria-invalid", String(!!validacion.error));
+      const h = S.plazos(f.value, { altoRiesgo: ch.alto.checked, ininteligibles: ch.inint.checked, improbable: ch.improb.checked,
+                                   brasil: ch.brasil.checked, nis2: ch.nis2.checked }, D.festivos_br);
+      $("pl-tabla").innerHTML = "<thead><tr><th>Norma</th><th>Destinatario o hito</th><th>Qué y hasta cuándo</th><th>Base</th></tr></thead><tbody>" +
+        h.map((x) => "<tr><td><b>" + esc(x.norma) + "</b></td><td>" + esc(x.hito) + "</td><td>" +
+          (ocultar ? '<span class="oculto">' + esc(x.texto) + "</span>" : esc(x.texto)) + '</td><td class="small">' + esc(x.base) + "</td></tr>").join("") + "</tbody>";
+      $("pl-msg").innerHTML = (validacion.error ? "" : msg || "") +
+        '<p class="small">El responsable del tratamiento valora el riesgo y documenta todas las brechas. Las 72 horas del RGPD son naturales desde la constancia; no autorizan a esperar si ya se puede notificar. ' +
+        "El ejercicio supone constancia simultánea de los hechos relevantes para cada norma. Hora peninsular (Europe/Madrid): se cuentan horas reales, incluidos los cambios de hora. " +
+        (ch.nis2.checked ? "NIS2: se ilustra el régimen general de la Directiva, no se determina si aplica a esta empresa ni se calculan obligaciones nacionales. Los prestadores de servicios de confianza tienen una notificación específica de 24 h. Hay que comprobar la normativa nacional y sectorial aplicable. " : "") +
+        (ch.brasil.checked ? "ANPD: ejemplo en fecha local de Brasilia (UTC−3), desde el día siguiente. Descuenta fines de semana y festivos nacionales fijos; no incluye festivos móviles o locales, incidencias de sede/sistema ni regímenes especiales. La fecha es orientativa, no un vencimiento jurídico completo." : "") + "</p>";
+    }
+    [f, ...Object.values(ch)].forEach((e) => e.addEventListener("input", () => { ocultar = false; pintar(); }));
+    ch.improb.addEventListener("change", () => { if (ch.improb.checked) ch.alto.checked = false; pintar(); });
+    ch.alto.addEventListener("change", () => { if (ch.alto.checked) ch.improb.checked = false; pintar(); });
+    const set = (o) => Object.entries(o).forEach(([k, v]) => (ch[k].checked = v));
+    const PASOS = [
+      ["Escenario · pregunta", () => { set({ alto: true, inint: false, improb: false, brasil: false, nis2: false }); ocultar = true; },
+       '<div class="info"><b>Pregunta:</b> ¿hasta cuándo hay para notificar a la AEPD? ¿Y a los clientes?</div>'],
+      ["RGPD", () => { set({ alto: true, inint: false, improb: false, brasil: false, nis2: false }); ocultar = false; },
+       '<div class="okbox">72 horas desde la constancia: el plazo vence el lunes, aunque haya fin de semana. A los clientes, sin dilación, porque hay alto riesgo.</div>'],
+      ["¿Y si estaban cifrados?", () => { set({ alto: false, inint: true, improb: true, brasil: false, nis2: false }); ocultar = false; },
+       '<div class="warnbox">Si, tras valorar también integridad y disponibilidad, el riesgo es improbable, no se notifica a la autoridad; <b>se documenta la valoración</b>. El cifrado apropiado puede eximir de comunicar a los afectados (art. 34.3 a); marcar «cifrado» no elimina por sí solo todas las obligaciones. En el caso original, la exportación iba en claro.</div>'],
+      ["Clientes en Brasil", () => { set({ alto: true, inint: false, improb: false, brasil: true, nis2: false }); ocultar = false; },
+       '<div class="info">Suponemos que aplica la LGPD y que existe riesgo o daño relevante: la regla general es tres días hábiles para la ANPD y los titulares.</div>'],
+      ["Si le aplicara NIS2", () => { set({ alto: true, inint: false, improb: false, brasil: true, nis2: true }); ocultar = false; },
+       '<div class="info">Para una entidad sujeta al régimen general de NIS2: alerta y notificación sin demora indebida, con máximos de 24 y 72 h; informe final, como máximo, un mes después de notificar. Si el incidente sigue en curso, se presenta un informe de situación.</div>'],
+    ];
+    f.value = D.plazos.constancia;
+    Clase.pasos($("pl-pasos"), { total: PASOS.length, etiqueta: (n) => PASOS[n][0], pintar: (n) => { f.value = D.plazos.constancia; PASOS[n][1](); pintar(PASOS[n][2]); } });
+  })();
+
+  // ============================================================ 7 · directriz
+  (function () {
+    const R = D.riesgos;
+    let riesgo = "R1", proporcional = null, armado = false;
+    const marcar = chips($("di-riesgos"), [["R1", "R1 · data lake público"], ["R6", "R6 · preproducción con datos reales"]], (r) => { riesgo = r; armado = false; proporcional = null; pintarRiesgo(); revisar(); });
+    const campos = [["id", "ID"], ["nombre", "Nombre"], ...D.campos];
+    const form = $("di-form");
+    campos.forEach(([k, et]) => {
+      const l = document.createElement("label"); l.htmlFor = "di-" + k; l.textContent = et;
+      const t = document.createElement(k === "id" || k === "nombre" ? "input" : "textarea");
+      if (t.tagName === "INPUT") t.type = "text";
+      t.id = "di-" + k; t.spellcheck = true; t.addEventListener("input", revisar);
+      form.append(l, t);
+    });
+    const valores = () => Object.fromEntries(campos.map(([k]) => [k, $("di-" + k).value]));
+    const cargar = (d) => { proporcional = null; campos.forEach(([k]) => ($("di-" + k).value = d[k] || "")); revisar(); };
+    function pintarRiesgo() {
+      marcar(riesgo);
+      const r = R[riesgo];
+      $("di-riesgo").innerHTML = "<b>" + esc(riesgo) + " · " + esc(r.nombre) + ".</b> " + esc(r.vulnerabilidad) + ". Riesgo " + (r.p * r.i) + " (" + esc(S.nivelRiesgo(r.p * r.i)) + ").";
+      $("di-modelo").textContent = "Ver la solución modelo de " + riesgo;
+    }
+    function revisar() {
+      const res = S.revisarDirectriz(valores(), proporcional);
+      $("di-check").innerHTML = res.map((x) => '<div class="criterio"><b>' + esc(x.criterio) + "</b>" +
+        (x.criterio === "Proporcional"
+          ? '<span><button type="button" class="chip" data-p="si" aria-pressed="' + (proporcional === true) + '">sí</button> <button type="button" class="chip" data-p="no" aria-pressed="' + (proporcional === false) + '">no</button></span>'
+          : (x.ok ? '<span class="est ok">✓ bien planteado</span>' : '<span class="est bad">✗ conviene revisar</span>')) +
+        '<span class="small">' + esc(x.motivo) + "</span></div>").join("");
+      $("di-check").querySelectorAll("[data-p]").forEach((b) => b.addEventListener("click", () => { proporcional = b.dataset.p === "si" ? (proporcional === true ? null : true) : (proporcional === false ? null : false); revisar(); }));
+      const v = valores();
+      $("di-vista").innerHTML = "<p><b>" + esc(v.id || "DIR-0X") + " · " + esc(v.nombre || "(sin nombre)") + "</b></p>" +
+        D.campos.map(([k, et]) => "<p><b>" + esc(et) + ":</b> " + (v[k] ? esc(v[k]) : '<span class="small">—</span>') + "</p>").join("");
+    }
+    $("di-vaga").addEventListener("click", () => cargar(D.directrices.vaga));
+    $("di-vaciar").addEventListener("click", () => cargar({}));
+    $("di-modelo").addEventListener("click", () => {
+      if (!armado) { armado = true; $("di-modelo").textContent = "Pulsa otra vez para mostrarla"; return; }
+      armado = false; cargar(D.directrices[riesgo]); pintarRiesgo();
+    });
+    // temporizador del ejercicio
+    let restante = 300, t = null, fin = null;
+    const mostrar = () => ($("di-reloj").textContent = Math.floor(restante / 60) + ":" + String(restante % 60).padStart(2, "0"));
+    function actualizarReloj() {
+      restante = Math.max(0, Math.ceil((fin - Date.now()) / 1000));
+      mostrar();
+      if (!restante) { clearInterval(t); t = null; $("di-pausa").textContent = "Finalizado"; $("di-pausa").disabled = true; }
+    }
+    function iniciarReloj() {
+      clearInterval(t);
+      fin = Date.now() + restante * 1000;
+      $("di-pausa").textContent = "Pausa"; $("di-pausa").disabled = false;
+      t = setInterval(actualizarReloj, 250);
+    }
+    document.querySelectorAll("#p-directriz [data-min]").forEach((b) => b.addEventListener("click", () => {
+      restante = +b.dataset.min * 60; mostrar(); iniciarReloj();
+    }));
+    $("di-pausa").addEventListener("click", () => {
+      if (t) { actualizarReloj(); clearInterval(t); t = null; if (restante > 0) $("di-pausa").textContent = "Seguir"; }
+      else if (restante > 0) iniciarReloj();
+    });
+    pintarRiesgo(); cargar({}); mostrar();
+  })();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Tema 2: explora la seguridad de objetos, NAS y SAN, compara controles de acceso y detecta deriva de configuración con el caso ficticio CosechaDirecta.">
+<title>Clase 3 · Almacenamiento · Seguridad en Bases de Datos, Blockchain y Big Data</title>
+<link rel="icon" href="comun/icono.svg" type="image/svg+xml">
+<link rel="stylesheet" href="comun/clase.css">
+<style>
+  :root { --acento: #1E88E5; }
+  /* ruta hasta el dato */
+  .ruta { display: grid; grid-template-columns: repeat(var(--ruta-columnas, 5), minmax(0, 1fr)); gap: .55rem; margin: .8rem 0; align-items: stretch; }
+  .capa { position: relative; border: 2px solid var(--line); border-radius: 10px; padding: .55rem .7rem .6rem; background: #fff; min-height: 7.2rem; }
+  .capa h4 { font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; color: var(--ink2); margin-bottom: .1rem; }
+  .capa .q { font-size: .8rem; color: var(--muted); margin-bottom: .35rem; }
+  .capa .ef { font-weight: 800; font-size: .95rem; }
+  .capa .tx { font-size: .9rem; margin-top: .25rem; overflow-wrap: anywhere; }
+  .capa.pasa { border-color: #90CAF9; }
+  .capa.no_aplica { border-style: dashed; background: var(--soft); }
+  .capa.deniega { border-color: var(--bad); background: var(--bad-l); }
+  .capa.permite { border-color: var(--ok); background: var(--ok-l); }
+  .capa.velada { background: var(--soft); border-style: dashed; }
+  .capa.velada .ef { color: var(--muted); font-size: 1.3rem; }
+  .capa:not(:last-child)::after { content: "→"; position: absolute; right: -.62rem; top: 42%; font-weight: 800; color: #90A4AE; }
+  .ficha { display: grid; grid-template-columns: 9.5rem 1fr; gap: .2rem .8rem; }
+  .ficha dt { font-weight: 800; color: var(--ink2); }
+  .ficha dd { min-width: 0; overflow-wrap: anywhere; }
+  .decision { font-size: 1.35rem; font-weight: 800; margin: .3rem 0; }
+  /* tablas de solicitudes */
+  table.t td .est { white-space: nowrap; }
+  table.t tr.foco td { background: #FFF8E1; }
+  table.t tr.clic { cursor: pointer; }
+  table.t tr.clic:hover td { background: #F5F9FF; }
+  table.t td.capa-txt { font-size: .88rem; }
+  .ctrl-grupos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .7rem; }
+  .ctrl-grupos fieldset { border: 1px solid var(--line); border-radius: 10px; padding: .45rem .7rem .55rem; }
+  .ctrl-grupos legend { font-weight: 800; font-size: .85rem; padding: 0 .3rem; color: var(--ink2); }
+  .ctrl-grupos label.check { margin: .15rem 0; }
+  .ctrl-grupos label.check span { font-size: .88rem; line-height: 1.3; }
+  .ctrl-grupos .que { display: block; font-size: .78rem; color: var(--muted); }
+  .resumen { font-size: 1.05rem; font-weight: 700; margin: .6rem 0; }
+  .traza { display: grid; grid-template-columns: 11rem 7rem 1fr; gap: .3rem .8rem; font-size: .95rem; }
+  .traza .h { font-weight: 800; color: var(--ink2); }
+  /* configuración */
+  .cfg-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 1rem; align-items: start; }
+  #cf-texto { min-height: 28rem; font-size: .92rem; line-height: 1.35; }
+  .alerta-caja { background: #1F2933; color: #E4E7EB; border-left: 6px solid var(--bad); border-radius: 10px; padding: .8rem 1rem;
+                 font-family: Menlo, Consolas, "Courier New", monospace; font-size: .9rem; white-space: pre-wrap; }
+  .alerta-caja b { color: #FFA8A8; }
+  .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+  .tres > div { border: 1px solid var(--line); border-radius: 10px; padding: .7rem .9rem; background: #fff; }
+  .tres b { display: block; font-size: 1.02rem; margin-bottom: .2rem; }
+  /* modalidades */
+  .modal-grande { font-size: 1.5rem; font-weight: 800; }
+  #mo-sol { overflow-wrap: anywhere; }
+  .reloj { font-variant-numeric: tabular-nums; font-size: 1.6rem; font-weight: 800; min-width: 5.5rem; display: inline-block; }
+  .sol-modelo { border: 2px solid var(--ok); border-radius: 10px; padding: .8rem 1rem; background: #fff; }
+  .sol-modelo h3:first-child { margin-top: 0; }
+  #ej-controles { grid-template-columns: 2fr 1fr; }
+  @media (max-width: 1100px) { .ruta, .ctrl-grupos, .cfg-grid, .tres { grid-template-columns: minmax(0, 1fr); } .capa:not(:last-child)::after { content: ""; } }
+  @media (max-width: 700px) { .ficha { grid-template-columns: 1fr; } .ficha dd { margin-bottom: .5rem; } .traza { grid-template-columns: minmax(0, 1fr) minmax(0, .7fr) minmax(0, 2fr); overflow-wrap: anywhere; } #ej-controles { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="header">
+  <h1><span class="num">CLASE 3 · TEMA 2</span> ¿Cómo abordamos los problemas de seguridad más comunes en los medios de almacenamiento?</h1>
+  <p>Simulador y auditor <b>didácticos</b> con el caso ficticio CosechaDirecta (ampliado en esta clase). No se conectan a ningún proveedor, NAS ni cabina: sus resultados no prueban un despliegue real. Funciona sin conexión: abrir este archivo en el navegador.</p>
+</header>
+<nav class="tabs" role="tablist" aria-label="Demostraciones">
+  <button class="tab" role="tab" id="t-ruta" aria-controls="p-ruta" aria-selected="true"><span class="tab-n">1</span>Ruta hasta el dato</button>
+  <button class="tab" role="tab" id="t-modalidades" aria-controls="p-modalidades" aria-selected="false"><span class="tab-n">2</span>Objetos, archivos y bloques</button>
+  <button class="tab" role="tab" id="t-acceso" aria-controls="p-acceso" aria-selected="false"><span class="tab-n">3</span>Antes y después</button>
+  <button class="tab" role="tab" id="t-config" aria-controls="p-config" aria-selected="false"><span class="tab-n">4</span>Configuración y deriva</button>
+  <button class="tab" role="tab" id="t-ejercicio" aria-controls="p-ejercicio" aria-selected="false"><span class="tab-n">5</span>Ejercicio: las copias</button>
+</nav>
+
+<main class="content">
+
+<!-- ============================================================ 1 · ruta hasta el dato -->
+<section class="panel active" id="p-ruta" role="tabpanel" aria-labelledby="t-ruta">
+  <div class="card">
+    <div class="pregunta">Los datos están cifrados. ¿Por qué alguien de fuera puede descargarlos?</div>
+    <div class="meta"><span class="tag illus">Caso ficticio · simulador didáctico</span><span class="tag">Tema 2 · 2.2 y 2.3 · exposición pública y responsabilidad compartida</span><span class="tag">Cifrado transparente: AWS, «Default encryption FAQ»; Microsoft Learn, «Azure Storage encryption for data at rest» (consultados el 17/10/2026)</span></div>
+    <div id="ru-pasos"></div>
+    <div class="row"><b>Solicitud:</b> <span class="row" id="ru-sol" style="margin:0"></span></div>
+    <div class="row"><b>Estado:</b> <span class="row modos" id="ru-estado" style="margin:0"></span></div>
+    <dl class="ficha" id="ru-ficha"></dl>
+    <div class="ruta" id="ru-ruta"></div>
+    <div id="ru-cifrado"></div>
+    <div id="ru-msg"></div>
+  </div>
+</section>
+
+<!-- ============================================================ 2 · modalidades -->
+<section class="panel" id="p-modalidades" role="tabpanel" aria-labelledby="t-modalidades">
+  <div class="card">
+    <h2>Tres formas de pedir un dato</h2>
+    <div class="meta"><span class="tag illus">Caso ficticio y ejemplos de servicios reales</span><span class="tag">Tema 2 · 2.2 · cloud, NAS y SAN; tabla 1 (p. 11)</span><span class="tag">NIST SP 800-209 (2020), apartados 2.1-2.3</span></div>
+    <table class="t" id="mo-tabla"></table>
+    <p class="small" style="margin-top:.5rem">Objetos, archivos y bloques son <b>formas de acceso</b>, no lugares: un proveedor cloud ofrece las tres. NAS comparte <b>archivos</b> (SMB, NFS); SAN entrega <b>bloques</b> (Fibre Channel, iSCSI).</p>
+  </div>
+  <div class="card">
+    <h2>¿Qué forma de acceso es?</h2>
+    <div id="mo-pasos"></div>
+    <div class="pregunta"><span class="modal-grande" id="mo-nombre"></span></div>
+    <div id="mo-sol"></div>
+  </div>
+</section>
+
+<!-- ============================================================ 3 · antes y después -->
+<section class="panel" id="p-acceso" role="tabpanel" aria-labelledby="t-acceso">
+  <div class="card">
+    <h2>Once solicitudes: ¿cuáles deberían fallar?</h2>
+    <div class="meta"><span class="tag illus">Simulador didáctico · caso ficticio</span><span class="tag">Tema 2 · 2.3 (configuraciones inseguras) y 2.4 (segmentación, WAF, permisos)</span><span class="tag">Reglas: ../Clases/Clase03_Tema2_Almacenamiento/caso_almacenamiento.py · mismos resultados que ejercicios/simulador_acceso.py</span></div>
+    <div class="row"><span id="ac-pasos"></span><span id="ac-boton"></span></div>
+    <div id="ac-msg"></div>
+    <div class="row">
+      <button type="button" class="btn" data-preset="antes">Antes (solo WAF)</button>
+      <button type="button" class="btn" data-preset="despues">Después (todos los controles)</button>
+      <button type="button" class="btn" data-preset="ninguno">Sin ningún control</button>
+    </div>
+    <div class="ctrl-grupos" id="ac-controles"></div>
+    <div class="resumen" id="ac-resumen"></div>
+    <table class="t" id="ac-tabla"></table>
+    <p class="small">Pulsa el número de una solicitud para ver su ruta capa a capa. Pasa el ratón por un control para ver qué cambia.</p>
+    <p class="small">El WAF frena el patrón de P3 en este caso. No demuestra que la API sea segura: la prevención de la inyección exige consultas parametrizadas y permisos adecuados. «Permitido» significa que supera las capas modeladas; no confirma una extracción real de datos.</p>
+    <div id="ac-traza"></div>
+  </div>
+</section>
+
+<!-- ============================================================ 4 · configuración y deriva -->
+<section class="panel" id="p-config" role="tabpanel" aria-labelledby="t-config">
+  <div class="card">
+    <h2>La misma configuración, tres contenedores</h2>
+    <div class="meta"><span class="tag illus">Formato didáctico inspirado en Terraform · auditor didáctico</span><span class="tag">Tema 2 · 2.4 (infraestructura como código) y 2.5 (comprobaciones, deriva y alertas)</span><span class="tag">Mismos resultados que ejercicios/auditor_config.py</span></div>
+    <div id="cf-pasos"></div>
+    <div id="cf-msg"></div>
+    <div class="cfg-grid">
+      <div>
+        <div class="row">
+          <button type="button" class="btn" id="cf-v1">Propuesta del lunes (v1)</button>
+          <button type="button" class="btn" id="cf-v2">Corrección (v2)</button>
+          <span class="small">Versión: <b class="mono" id="cf-version"></b></span>
+        </div>
+        <textarea id="cf-texto" class="mono" spellcheck="false" aria-label="Fichero de configuración"></textarea>
+        <p class="small">Puedes modificar los controles. El inventario y la clasificación de los tres contenedores pertenecen al caso: quitarlos o cambiar su etiqueta deja incompleta la comprobación. Este formato no se ejecuta con Terraform.</p>
+      </div>
+      <div>
+        <h3 style="margin-top:0">Comprobación antes de desplegar</h3>
+        <div id="cf-resultado"></div>
+        <div id="cf-pruebas"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>El jueves 22/10/2026, a las 16:40, alguien lo cambia a mano</h2>
+    <p id="cf-motivo"></p>
+    <table class="t" id="cf-cambios"></table>
+    <div class="row" style="margin-top:.8rem"><b>Vigilancia:</b> <span class="row modos" id="cf-vig" style="margin:0"></span></div>
+    <div id="cf-alerta"></div>
+  </div>
+</section>
+
+<!-- ============================================================ 5 · ejercicio -->
+<section class="panel" id="p-ejercicio" role="tabpanel" aria-labelledby="t-ejercicio">
+  <div class="card">
+    <h2>Ejercicio: las copias de seguridad (8 minutos)</h2>
+    <div class="meta"><span class="tag illus">Caso ficticio · simulador didáctico</span><span class="tag">Tema 2 · 2.3 (exposición de copias, credenciales) · 2.4 · 2.5 (respuesta a alertas)</span><span class="tag">NIST SP 800-209: AC-SS-R20 (separación de funciones), inmutabilidad de las copias</span></div>
+    <div class="grid2">
+      <div>
+        <h3 style="margin-top:0">La arquitectura</h3>
+        <ul id="ej-contexto" style="margin-left:1.2rem"></ul>
+        <div class="badbox" id="ej-alerta"></div>
+      </div>
+      <div>
+        <h3 style="margin-top:0">Qué tenéis que entregar</h3>
+        <ol id="ej-tareas" style="margin-left:1.2rem"></ol>
+        <div class="row" style="margin-top:.8rem"><b>Tiempo:</b> <span class="reloj" id="ej-reloj">8:00</span>
+          <button type="button" class="btn" data-min="8">8 min</button><button type="button" class="btn" data-min="5">5 min</button><button type="button" class="btn" data-min="3">3 min</button><button type="button" class="btn" id="ej-pausa">Iniciar</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Comprobad vuestras propuestas</h2>
+    <div id="ej-pasos"></div>
+    <div id="ej-msg"></div>
+    <div class="ctrl-grupos" id="ej-controles"></div>
+    <div class="resumen" id="ej-resumen"></div>
+    <table class="t" id="ej-tabla"></table>
+  </div>
+  <div class="card">
+    <div class="row" style="justify-content: space-between"><h2 style="margin:0">Solución modelo y errores habituales</h2><button type="button" class="btn" id="ej-modelo" aria-expanded="false" aria-controls="ej-solucion">Ver la solución modelo</button></div>
+    <div id="ej-solucion" style="margin-top:.6rem" hidden></div>
+  </div>
+</section>
+</main>
+<footer>Caso ficticio: empresa, personas, cuentas, contenedores, direcciones IP (rangos de documentación y privados), configuraciones y registros inventados. Simulador y auditor didácticos, sin conexión a servicios reales. Fuentes: tema 2 de la asignatura (apartados 2.1 a 2.5); <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints">endpoints privados de Azure Storage</a>; <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-209.pdf">NIST SP 800-209: almacenamiento, zonificación y LUN masking</a>; <a href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html">OWASP: prevención de inyección SQL</a>. Las fuentes externas requieren conexión; la demo funciona sin ella.</footer>
+
+<script src="comun/clase.js"></script>
+<script src="01_fundamentos_lib.js"></script>
+<script src="02_almacenamiento_lib.js"></script>
+<script src="02_almacenamiento_datos.js"></script>
+<script>
+(function () {
+  "use strict";
+  const D = window.ALM_DATOS, A = window.ALM, esc = Clase.esc;
+  const $ = (id) => document.getElementById(id);
+  const NOMBRE_CAPA = Object.fromEntries(D.capas.map((c) => [c[0], c[1]]));
+  const PREG_CAPA = Object.fromEntries(D.capas.map((c) => [c[0], c[2]]));
+  const EFECTO = { pasa: "pasa", deniega: "DENIEGA", permite: "PERMITE", no_aplica: "no aplica" };
+  const estDecision = (d) => '<span class="est ' + (d === "PERMITIDO" ? "warn" : "na") + '">' + d + "</span>";
+  const estValor = (v) => (v === "correcto" ? '<span class="est ok">✓ correcto</span>'
+    : v === "acceso indebido" ? '<span class="est bad">✗ indebido</span>' : '<span class="est bad">✗ legítimo roto</span>');
+
+  // ------------------------------------------------------------ pestañas
+  document.querySelectorAll('[role="tab"]').forEach((t) => t.addEventListener("click", () => {
+    document.querySelectorAll('[role="tab"]').forEach((x) => x.setAttribute("aria-selected", String(x === t)));
+    document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === t.getAttribute("aria-controls")));
+  }));
+  function chips(host, opciones, alPulsar) {
+    host.innerHTML = "";
+    const bs = opciones.map(([valor, texto]) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "chip"; b.textContent = texto; b.dataset.v = valor; b.setAttribute("aria-pressed", "false");
+      b.addEventListener("click", () => alPulsar(valor));
+      host.append(b);
+      return b;
+    });
+    return (valor) => bs.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === valor)));
+  }
+  function trazaHTML(sol, r) {
+    return '<div class="traza"><span class="h">Capa</span><span class="h">Efecto</span><span class="h">Qué pasa</span>' +
+      r.traza.map((t) => "<span><b>" + esc(NOMBRE_CAPA[t.capa]) + "</b></span><span>" + esc(EFECTO[t.efecto]) + "</span><span>" + esc(t.texto) + "</span>").join("") +
+      '<span><b>Cifrado en reposo</b></span><span>informa</span><span>' + esc(sol.cifrado) + "</span></div>";
+  }
+  // tabla de solicitudes con resultados (pestañas 3 y 5)
+  function tablaSolicitudes(host, solicitudes, activos, opts) {
+    const rs = A.evaluarTodas(solicitudes, activos, D.capas);
+    const oculto = opts.oculto;
+    host.innerHTML = "<thead><tr><th>Sol.</th><th>Quién</th><th>Desde</th><th>Servicio</th><th>Pide</th><th class=\"c\">¿Debería entrar?</th><th>Resultado</th><th>Qué lo decide</th><th>Valoración</th></tr></thead><tbody>" +
+      solicitudes.map((s, i) => {
+        const r = rs[i];
+        const cel = (h) => (oculto ? '<span class="oculto">' + h + "</span>" : h);
+        const decide = "<b>" + esc(NOMBRE_CAPA[r.capa]) + ":</b> " + esc(r.corto) +
+          (r.tambien.length ? ' <span class="small">(también: ' + esc(r.tambien.map((c) => NOMBRE_CAPA[c]).join(", ")) + ")</span>" : "");
+        const enlace = opts.alPulsar ? '<button type="button" class="btn small" aria-label="Ver ruta de ' + s.id + '" aria-controls="ac-traza">' + s.id + '</button>' : '<b>' + s.id + '</b>';
+        return '<tr class="' + (opts.alPulsar ? "clic" : "") + ((opts.foco || []).includes(s.id) ? " foco" : "") + '" data-id="' + s.id + '"><td>' + enlace + "</td><td>" + esc(s.quien) +
+          "</td><td>" + esc(s.origen) + '<br><span class="small mono">' + esc(s.ip) + "</span></td><td>" + esc(s.servicio) + "</td><td>" + esc(s.pide) +
+          '</td><td class="c">' + (s.legitima ? "sí" : "no") + "</td><td>" + cel(estDecision(r.decision)) + '</td><td class="capa-txt">' + cel(decide) +
+          "</td><td>" + cel(estValor(r.valoracion)) + "</td></tr>";
+      }).join("") + "</tbody>";
+    host.querySelectorAll("tr.clic").forEach((tr) => tr.addEventListener("click", () => opts.alPulsar && opts.alPulsar(tr.dataset.id)));
+    return A.resumen(rs);
+  }
+  function resumenHTML(res, oculto) {
+    if (oculto) return '<span class="small">Resultados ocultos: primero, la predicción del grupo.</span>';
+    return "Accesos indebidos: " + (res.indebidos.length ? '<span class="est bad">' + res.indebidos.join(", ") + "</span>" : '<span class="est ok">ninguno</span>') +
+      " · Accesos legítimos rotos: " + (res.rotos.length ? '<span class="est bad">' + res.rotos.join(", ") + "</span>" : '<span class="est ok">ninguno</span>');
+  }
+  function casillas(host, controles, activos, alCambiar) {
+    const grupos = {};
+    controles.forEach((c) => (grupos[c[1]] = grupos[c[1]] || []).push(c));
+    host.innerHTML = Object.entries(grupos).map(([g, cs]) => "<fieldset><legend>" + esc(g) + "</legend>" + cs.map((c) =>
+      '<label class="check" title="' + esc(c[3]) + '"><input type="checkbox" data-c="' + c[0] + '"' + (activos.has(c[0]) ? " checked" : "") + "><span><b>" + c[0] + "</b> · " +
+      esc(c[2]) + "</span></label>").join("") + "</fieldset>").join("");
+    host.querySelectorAll("input[data-c]").forEach((i) => i.addEventListener("change", () => {
+      if (i.checked) activos.add(i.dataset.c); else activos.delete(i.dataset.c);
+      alCambiar();
+    }));
+  }
+
+  // ============================================================ 1 · ruta hasta el dato
+  (function () {
+    let sid = "P1", estado = "antes", revelar = 5, preguntando = false;
+    const marcarSol = chips($("ru-sol"), D.solicitudes.map((s) => [s.id, s.id]), (v) => { sid = v; revelar = 5; preguntando = false; pintar(); });
+    const marcarEst = chips($("ru-estado"), [["antes", "Antes"], ["despues", "Después"]], (v) => { estado = v; revelar = 5; preguntando = false; pintar(); });
+    function pintar(msg) {
+      marcarSol(sid); marcarEst(estado);
+      const s = D.solicitudes.find((x) => x.id === sid);
+      const r = A.evaluar(s, D.presets[estado], D.capas);
+      $("ru-ficha").innerHTML = "<dt>Quién</dt><dd>" + esc(s.quien) + "</dd><dt>Desde dónde</dt><dd>" + esc(s.origen) + " (" + esc(s.ip) + ")</dd>" +
+        "<dt>Por qué servicio</dt><dd>" + esc(s.servicio) + "</dd><dt>Qué pide</dt><dd>" + esc(s.operacion) + ": <span class=\"mono\">" + esc(s.recurso) + "</span></dd>";
+      // solo las capas que recorre esta solicitud, y al final el dato (con su cifrado)
+      const n = r.traza.length;
+      $("ru-ruta").style.setProperty("--ruta-columnas", n + 1);
+      const fin = revelar >= 5 && !preguntando;
+      $("ru-ruta").innerHTML = r.traza.map((t, k) => {
+        const velada = k >= revelar;
+        return '<div class="capa ' + (velada ? "velada" : t.efecto) + '"><h4>' + esc(NOMBRE_CAPA[t.capa]) + '</h4><div class="q">' + esc(PREG_CAPA[t.capa]) +
+          '</div><div class="ef">' + (velada ? "?" : esc(EFECTO[t.efecto])) + '</div><div class="tx">' + (velada ? "" : esc(t.texto)) + "</div></div>";
+      }).join("") + '<div class="capa ' + (fin ? (r.valoracion === "correcto" ? "permite" : "deniega") : "velada") + '"><h4>El dato</h4><div class="q">¿Lo recibe?</div><div class="ef">' +
+        (fin ? (r.decision === "PERMITIDO" ? (s.medio === "Objetos" ? "SÍ, descifrado" : "SÍ") : "NO") : "?") + '</div><div class="tx">' + (fin ? esc(s.recurso) : "") + "</div></div>";
+      $("ru-cifrado").innerHTML = fin ? '<div class="warnbox"><b>Cifrado en reposo:</b> ' + esc(s.cifrado) + "</div>" : "";
+      $("ru-msg").innerHTML = (msg || "") + (fin ? '<div class="decision">' + (r.decision === "PERMITIDO" ? '<span class="est warn">PERMITIDO</span>' : '<span class="est na">DENEGADO</span>') +
+        " · lo decide la capa «" + esc(NOMBRE_CAPA[r.capa]) + "»: " + esc(r.corto) + "</div>" : "");
+    }
+    const PASOS = [
+      ["Pregunta", () => { sid = "P1"; estado = "antes"; revelar = 0; preguntando = true; },
+       '<div class="info"><b>Pregunta:</b> el data lake está cifrado. Seguid la solicitud P1: quién, desde dónde, por qué servicio, con qué permisos. ¿Qué capa la deja pasar?</div>'],
+      ["Red", () => { revelar = 1; preguntando = true; }, '<div class="info">¿Llega? El endpoint público acepta conexiones desde Internet.</div>'],
+      ["WAF", () => { revelar = 2; preguntando = true; }, '<div class="info">La solicitud va directa al almacén: el WAF, que protege la web, no la ve.</div>'],
+      ["Identidad", () => { revelar = 3; preguntando = true; }, '<div class="info">Sin credenciales: anónima.</div>'],
+      ["Permisos", () => { revelar = 4; preguntando = true; }, '<div class="info">La política del contenedor concede lectura a cualquiera.</div>'],
+      ["Cifrado y decisión", () => { revelar = 5; preguntando = false; },
+       '<div class="okbox"><b>El cifrado no decide quién recibe el dato:</b> el servicio descifra para quien la política autoriza. La puerta es la política.</div>'],
+      ["Después", () => { sid = "P1"; estado = "despues"; revelar = 5; preguntando = false; },
+       '<div class="okbox">Con los controles, P1 ya no llega: la red pública está cerrada para el data lake y, además, la cuenta bloquea el acceso anónimo.</div>'],
+      ["Analítica (P10)", () => { sid = "P10"; estado = "despues"; revelar = 5; preguntando = false; },
+       '<div class="okbox">Y lo legítimo sigue funcionando: analítica entra por el endpoint privado con su rol.</div>'],
+    ];
+    const p = Clase.pasos($("ru-pasos"), { total: PASOS.length, etiqueta: (n) => PASOS[n][0], pintar: (n) => { PASOS[n][1](); pintar(PASOS[n][2]); } });
+    Clase.marcarPasoActivo(p);
+  })();
+
+  // ============================================================ 2 · modalidades
+  (function () {
+    $("mo-tabla").innerHTML = "<thead><tr><th>Forma de acceso</th><th>Qué pide el cliente</th><th>Unidad</th><th>Quién conoce ficheros y usuarios</th><th>Dónde se decide el acceso</th></tr></thead><tbody>" +
+      D.modalidades.map((m) => "<tr><td><b>" + esc(m[0]) + "</b></td>" + m.slice(1).map((x) => "<td>" + esc(x) + "</td>").join("") + "</tr>").join("") + "</tbody>";
+    const items = D.ejemplos_modalidad.concat([["En la SAN: ¿quién decide si m.ruiz puede leer clientes.csv?", "Bloques", "iSCSI",
+      "La red de almacenamiento restringe la comunicación entre equipos (zonificación en una SAN Fibre Channel; segmentación y filtrado en este caso iSCSI). La cabina limita qué iniciador ve qué LUN mediante LUN masking. El servidor aplica los permisos de los ficheros: no protegen frente a otro host que obtenga acceso a los bloques y pueda interpretarlos.",
+      "NIST SP 800-209, AC-SS-R24 y R25"]]);
+    Clase.pasos($("mo-pasos"), { total: items.length * 2, etiqueta: (n) => "Ejemplo " + (Math.floor(n / 2) + 1) + (n % 2 ? " · respuesta" : " · pregunta"), pintar: (n) => {
+      const [nombre, modo, proto, decide, fuente] = items[Math.floor(n / 2)];
+      $("mo-nombre").textContent = nombre;
+      $("mo-sol").innerHTML = n % 2
+        ? '<div class="okbox"><b>' + esc(modo) + "</b> · " + esc(proto) + "<br><b>Dónde se decide el acceso:</b> " + esc(decide) + '<br><span class="small">Fuente: ' + esc(fuente) + "</span></div>"
+        : '<div class="info"><b>Pregunta:</b> ¿objetos, archivos o bloques? ¿Por qué protocolo? ¿Dónde se decide quién accede?</div>';
+    } });
+  })();
+
+  // ============================================================ 3 · antes y después
+  (function () {
+    const activos = new Set(D.presets.antes);
+    let oculto = false, foco = [], sel = null;
+    const pintarCasillas = () => casillas($("ac-controles"), D.controles, activos, () => { oculto = false; foco = []; pintar(); });
+    function pintar(msg) {
+      if (msg !== undefined) $("ac-msg").innerHTML = msg;
+      const res = tablaSolicitudes($("ac-tabla"), D.solicitudes, [...activos], { oculto, foco, alPulsar: (id) => { sel = id; pintarTraza(); } });
+      $("ac-resumen").innerHTML = resumenHTML(res, oculto);
+      pintarTraza();
+    }
+    function pintarTraza() {
+      if (!sel || oculto) { $("ac-traza").innerHTML = ""; return; }
+      const s = D.solicitudes.find((x) => x.id === sel);
+      const r = A.evaluar(s, [...activos], D.capas);
+      $("ac-traza").innerHTML = "<h3>" + esc(s.id) + " · " + esc(s.quien) + " → " + esc(s.recurso) + " · " + estDecision(r.decision) + "</h3>" + trazaHTML(s, r);
+    }
+    const fijar = (lista) => { activos.clear(); lista.forEach((c) => activos.add(c)); pintarCasillas(); };
+    document.querySelectorAll("#p-acceso [data-preset]").forEach((b) => b.addEventListener("click", () => {
+      fijar(b.dataset.preset === "ninguno" ? [] : D.presets[b.dataset.preset]); oculto = false; foco = []; pintar("");
+    }));
+    const PASOS = [
+      ["Antes · predicción", ["W"], true, [], '<div class="info"><b>Pregunta:</b> ya hay WAF y el data lake está cifrado. ¿Cuáles de estas once solicitudes deberían fallar? ¿Cuáles fallan hoy?</div>'],
+      ["Antes · resultado", ["W"], false, ["P1", "P4", "P6", "P8"], '<div class="badbox"><b>Diez de once entran.</b> Cuatro no deberían: exposición pública (P1), permisos excesivos (P4), administración accesible con credenciales de fábrica (P6) y una LUN visible para todos (P8). Solo el WAF frena P3.</div>'],
+      ["¿Y el WAF?", ["W"], false, ["P1", "P3"], '<div class="warnbox">El WAF solo ve lo que pasa por la web: bloquea P3, pero P1 va directa al almacén y nunca pasa por él.</div>'],
+      ["Endpoint privado", ["W", "O2"], false, ["P1", "P10"], '<div class="warnbox"><b>Crear el endpoint privado no cierra el público:</b> analítica ya entra por la red privada, pero P1 sigue entrando desde Internet.</div>'],
+      ["Cerrar primero la red pública", ["W", "O3"], false, ["P1", "P10"], '<div class="badbox">Si se cierra la red pública <b>sin</b> endpoint privado, P1 queda fuera… y analítica también: <b>acceso legítimo roto</b>. Cada cambio se comprueba con lo que debe fallar y con lo que debe seguir funcionando.</div>'],
+      ["Objetos corregidos", ["W", "O1", "O2", "O3"], false, ["P1", "P10"], '<div class="okbox">Endpoint privado, red pública cerrada y bloqueo de acceso anónimo en la cuenta: P1 fuera por dos capas; P10 dentro.</div>'],
+      ["VLAN dibujada", ["W", "O1", "O2", "O3", "B1"], false, ["P8"], '<div class="warnbox"><b>Dibujar la VLAN no aísla:</b> el router entre VLAN deja pasar todo y preproducción sigue montando la instantánea (P8).</div>'],
+      ["Regla efectiva y LUN masking", ["W", "O1", "O2", "O3", "B1", "B2", "B3"], false, ["P8", "P9", "P11"], '<div class="okbox">Con la regla entre VLAN y el LUN masking, P8 queda fuera por dos capas; pg01 (P9) sigue con su LUN y el servidor de copias (P11), con la instantánea, porque los dos tienen su interfaz de almacenamiento en la VLAN 20.</div>'],
+      ["Archivos corregidos", D.presets.despues, false, ["P4", "P5", "P6", "P7"], '<div class="okbox">ACL solo para Logística, panel sin reenviar y cuenta admin desactivada con MFA: P4 y P6 fuera; P5 y P7 dentro.</div>'],
+      ["Después: lo legítimo", D.presets.despues, false, D.solicitudes.filter((s) => s.legitima).map((s) => s.id), '<div class="okbox"><b>Ningún acceso indebido y nada legítimo roto.</b> Esa es la prueba que acompaña a cada cambio.</div>'],
+    ];
+    Clase.pasos($("ac-pasos"), { total: PASOS.length, etiqueta: (n) => PASOS[n][0], pintar: (n) => {
+      const [, lista, oc, f, msg] = PASOS[n];
+      fijar(lista); oculto = oc; foco = f; pintar(msg);
+    } });
+    Clase.botonPregunta($("ac-boton"), (on) => { oculto = on; pintar(); }, { ver: "Ocultar resultados para preguntar", ocultas: "Mostrar los resultados" });
+  })();
+
+  // ============================================================ 4 · configuración y deriva
+  (function () {
+    const txt = $("cf-texto");
+    let oculto = false, vig = "evento", fase = "alerta";   // fase del jueves: oculta, pregunta o alerta
+    const marcarVig = chips($("cf-vig"), [["evento", "Regla por evento (avisa al cambiar)"], ["diaria", "Comparación diaria a las 02:00"]], (v) => { vig = v; fase = "alerta"; pintarJueves(); });
+    function comprobar() {
+      $("cf-version").textContent = A.version(txt.value);
+      let res;
+      try { res = A.resolver(A.leer(txt.value, D.atributos)); }
+      catch (e) { $("cf-resultado").innerHTML = '<div class="badbox"><b>Error en el fichero:</b> ' + esc(e.message) + "</div>"; $("cf-pruebas").innerHTML = ""; return; }
+      const rs = A.comprobar(res, D.comprobaciones);
+      const alcance = A.alcanceCaso(res, D);
+      const fallos = rs.filter((r) => !r.ok);
+      const nRec = new Set(fallos.map((r) => r.recurso)).size;
+      const cel = (h) => (oculto ? '<span class="oculto">' + h + "</span>" : h);
+      const texto = Object.fromEntries(D.comprobaciones.map((c) => [c.id, c.texto]));
+      $("cf-resultado").innerHTML = '<table class="t"><thead><tr><th>Comprobación</th><th>Recurso</th><th>Resultado</th><th>Detalle</th></tr></thead><tbody>' +
+        rs.map((r) => "<tr><td><b>" + r.id + '</b><br><span class="small">' + esc(texto[r.id]) + "</span></td><td class=\"mono\">" + esc(r.recurso) + "</td><td>" +
+          cel(r.ok ? '<span class="est ok">ok</span>' : '<span class="est bad">FALLA</span>') + '</td><td class="small">' +
+          cel(r.fallos.map(([a, ac, op, es]) => esc(a) + " = «" + esc(ac) + "» (se espera " + esc(A.espera(op, es)) + ")").join("; ")) + "</td></tr>").join("") +
+        "</tbody></table>" + '<div class="resumen">' + cel(fallos.length + " fallos en " + nRec + " recursos · " + (fallos.length ? "el despliegue simulado se detiene" : alcance.length ? "comprobación del caso incompleta" : "controles del caso superados")) + "</div>" +
+        (alcance.length ? '<div class="warnbox"><b>Alcance de la comprobación:</b><ul>' + alcance.map((p) => '<li>' + esc(p) + '</li>').join('') + '</ul></div>' : '');
+      $("cf-pruebas").innerHTML = fallos.length || oculto || alcance.length ? "" : "<h3>Pruebas de acceso simuladas tras aplicar la configuración</h3><p class=\"small\">Resultado del modelo para P1 y P10; no se despliega ni se verifica infraestructura real.</p><table class=\"t\"><thead><tr><th>Sol.</th><th>Quién</th><th>Se espera</th><th>Se obtiene</th><th>Por qué</th></tr></thead><tbody>" +
+        A.pruebasAcceso(res, D).map((p) => "<tr><td><b>" + p.id + "</b></td><td>" + esc(p.quien) + "</td><td>" + p.esperado + "</td><td>" + estDecision(p.obtenido) + " " +
+          (p.ok ? '<span class="est ok">ok</span>' : '<span class="est bad">FALLA</span>') + "</td><td class=\"small\">" + esc(p.motivo) + "</td></tr>").join("") + "</tbody></table>";
+    }
+    txt.addEventListener("input", () => { oculto = false; comprobar(); });
+    $("cf-v1").addEventListener("click", () => { txt.value = D.config_v1; oculto = false; comprobar(); });
+    $("cf-v2").addEventListener("click", () => { txt.value = D.config_v2; oculto = false; comprobar(); });
+    $("cf-motivo").innerHTML = "<b>r.vidal</b>, del equipo de datos: " + esc(D.motivo_cambio) + " Lo desplegado es la versión v2 (sin fallos).";
+    function pintarJueves() {
+      marcarVig(vig);
+      const tz = (iso) => A.hora(new Date(iso), D);
+      $("cf-cambios").innerHTML = "<thead><tr><th>Hora</th><th>Recurso</th><th>Atributo</th><th>Antes</th><th>Después</th><th>Quién y desde dónde</th></tr></thead><tbody>" +
+        D.cambios.map((c) => '<tr><td class="mono">' + tz(c[0]) + '</td><td class="mono">' + esc(c[1]) + '</td><td class="mono">' + esc(c[2]) + "</td><td>«" + esc(c[3]) + "»</td><td><b>«" + esc(c[4]) + "»</b></td><td>" + esc(c[5]) + " · " + esc(c[6]) + "</td></tr>").join("") + "</tbody>";
+      if (fase === "oculta") { $("cf-alerta").innerHTML = '<div class="info">Lo desplegado es la versión v2, sin fallos. Lo que pasa el jueves aparece a partir del paso 4.</div>'; return; }
+      if (fase === "pregunta") { $("cf-alerta").innerHTML = '<div class="info"><b>Pregunta:</b> ¿qué debería saltar, cuándo, a quién y con qué evidencia? ¿Qué hay que hacer?</div>'; return; }
+      const res = A.resolver(A.leer(D.config_v2, D.atributos));
+      const al = A.alerta(res, D.config_v2, vig, D);
+      const lineas = A.lineasAlerta(al, D).map((l, i) => (i === 0 ? "<b>" + esc(l) + "</b>" : esc(l))).join("\n");
+      const filas = D.accesos.map((a) => {
+        const dentro = al.descargasVentana.includes(a);
+        const bloqueada = a[1] === "anónimo" && !dentro;
+        return '<tr class="' + (dentro ? "alerta" : "") + '"><td class="mono">' + tz(a[0]) + "</td><td>" + esc(a[1]) + '</td><td class="mono">' + esc(a[2]) + '</td><td class="mono">' + esc(a[3]) + "</td><td>" + (bloqueada ? "Denegada" : "200 · lectura") + "</td><td>" +
+          (a[1] !== "anónimo" ? '<span class="est ok">legítimo</span>' : dentro ? '<span class="est bad">dentro de la ventana</span>' : '<span class="est na">bloqueada tras la reversión</span>') + "</td></tr>";
+      }).join("");
+      $("cf-alerta").innerHTML = '<div class="alerta-caja">' + lineas + "</div>" +
+        '<div class="resumen">Ventana de exposición (revirtiendo en ' + D.objetivo_reversion_min + " min desde el aviso): " + A.hora(al.expuestoDesde, D) + " → " + esc(A.fecha(al.reversion, D)) + " " + A.hora(al.reversion, D) +
+        " (" + esc(A.duracion(al.ventana)) + ") · descargas anónimas: " + (al.descargasVentana.length ? '<span class="est bad">' + al.descargasVentana.length + " desde " + al.ips.length + " IP</span>" : '<span class="est ok">0</span>') + "</div>" +
+        '<p class="small">Las mismas solicitudes se comparan en ambos escenarios. Si la reversión ya se ha aplicado, el modelo deniega las anónimas: no son descargas ni registros HTTP 200 observados. Se supone que la reversión se completa 15 minutos después del aviso.</p>' +
+        '<table class="t"><thead><tr><th>Hora</th><th>Quién</th><th>IP</th><th>Objeto</th><th>Resultado simulado</th><th>Valoración</th></tr></thead><tbody>' + filas + "</tbody></table>" +
+        '<div class="tres" style="margin-top:.8rem"><div><b>Evidencia</b>qué cambió, valor esperado y real, quién, cuándo y desde dónde; y los accesos de la ventana.</div><div><b>Destinatario</b>un rol que puede actuar: el propietario del recurso, con copia a la guardia de seguridad.</div><div><b>Acción prevista</b>revertir desde el código, conservar registros, revisar accesos y decidir con el DPD.</div></div>';
+    }
+    const PASOS = [
+      ["Propuesta · predicción", () => { txt.value = D.config_v1; oculto = true; fase = "oculta"; },
+       '<div class="info"><b>Pregunta:</b> el módulo se usa en tres contenedores. ¿Qué dirá la comprobación antes de desplegar? ¿Cuántos fallos?</div>'],
+      ["Propuesta · resultado", () => { txt.value = D.config_v1; oculto = false; fase = "oculta"; },
+       '<div class="badbox"><b>Diez fallos y el despliegue se detiene.</b> El código repitió el error en los tres contenedores. Fijaos en CHK-4: el cifrado está bien y no arregla nada de lo demás.</div>'],
+      ["Corrección en el módulo", () => { txt.value = D.config_v2; oculto = false; fase = "oculta"; },
+       '<div class="okbox">Se cambian el bloque de la cuenta y el módulo: <b>cero fallos</b> en los tres contenedores. Después de desplegar, dos pruebas de acceso: el anónimo debe fallar y analítica debe entrar.</div>'],
+      ["Jueves · predicción", () => { txt.value = D.config_v2; oculto = false; fase = "pregunta"; vig = "evento"; },
+       '<div class="info">Lo desplegado cumple el código… hasta que alguien lo cambia desde la consola.</div>'],
+      ["Alerta por evento", () => { txt.value = D.config_v2; oculto = false; fase = "alerta"; vig = "evento"; },
+       '<div class="okbox">La regla por evento avisa a las 16:42:31, con la evidencia, a quien puede actuar y con la acción prevista. Revirtiendo en 15 minutos, <b>ninguna descarga anónima</b>.</div>'],
+      ["Si solo se compara a diario", () => { txt.value = D.config_v2; oculto = false; fase = "alerta"; vig = "diaria"; },
+       '<div class="badbox">Con una comparación diaria a las 02:00 (y la misma reversión en 15 minutos desde el aviso), la ventana dura más de nueve horas y entran <b>tres descargas anónimas desde dos IP</b>. La alerta no cierra nada sola: lo hace la reversión. La frecuencia de la comprobación también es un control.</div>'],
+    ];
+    Clase.pasos($("cf-pasos"), { total: PASOS.length, etiqueta: (n) => PASOS[n][0], pintar: (n) => {
+      PASOS[n][1](); $("cf-msg").innerHTML = PASOS[n][2]; comprobar(); pintarJueves();
+    } });
+  })();
+
+  // ============================================================ 5 · ejercicio
+  (function () {
+    $("ej-contexto").innerHTML = D.ej_contexto.map((t) => "<li>" + esc(t) + "</li>").join("");
+    $("ej-alerta").innerHTML = "<b>Alerta · " + esc(D.ej_alerta.cuando) + ".</b> " + esc(D.ej_alerta.texto);
+    $("ej-tareas").innerHTML = D.ej_tareas.map((t) => "<li>" + esc(t) + "</li>").join("");
+    const activos = new Set();
+    const pintarCasillas = () => casillas($("ej-controles"), D.controles_ej, activos, pintar);
+    function pintar(msg) {
+      if (msg !== undefined) $("ej-msg").innerHTML = msg;
+      const res = tablaSolicitudes($("ej-tabla"), D.solicitudes_ej, [...activos], { oculto: false });
+      $("ej-resumen").innerHTML = resumenHTML(res, false);
+    }
+    const fijar = (lista) => { activos.clear(); lista.forEach((c) => activos.add(c)); pintarCasillas(); };
+    const PASOS = [
+      ["Hoy", [], '<div class="info">Así está hoy: la clave robada borra y descarga, y un PC infectado alcanza la copia semanal. Marcad los cambios que propone el grupo y mirad qué solicitudes cambian.</div>'],
+      ["X1 · solo subir", ["X1"], '<div class="okbox">Con la clave limitada a subir, E2 y E3 fallan… y E1, la copia de esta noche, sigue funcionando.</div>'],
+      ["X2 · retención", ["X2"], '<div class="warnbox">La retención impide borrar (E2), pero <b>no impide leer</b> (E3). Cada control cubre una parte.</div>'],
+      ["Solución modelo", D.presets_ej.solucion, '<div class="okbox">X1 + X2 + X5: ningún acceso indebido y nada legítimo roto. X4 (rotar la clave) es la contención inmediata de la alerta.</div>'],
+      ["Con refuerzos", D.presets_ej.todos, '<div class="okbox">Con X3 y X4, una clave robada deja de servir aunque tuviera más permisos de los debidos.</div>'],
+    ];
+    Clase.pasos($("ej-pasos"), { total: PASOS.length, etiqueta: (n) => PASOS[n][0], pintar: (n) => { fijar(PASOS[n][1]); pintar(PASOS[n][2]); } });
+    // solución modelo: dos pulsaciones para no enseñarla sin querer
+    let armado = false;
+    $("ej-modelo").addEventListener("click", () => {
+      if (!$("ej-solucion").hidden) {
+        $("ej-solucion").hidden = true;
+        $("ej-modelo").setAttribute("aria-expanded", "false");
+        $("ej-modelo").textContent = "Ver la solución modelo";
+        armado = false;
+        return;
+      }
+      if (!armado) { armado = true; $("ej-modelo").textContent = "Pulsa otra vez para mostrarla"; return; }
+      armado = false; $("ej-modelo").textContent = "Ocultar la solución modelo";
+      $("ej-solucion").hidden = false;
+      $("ej-modelo").setAttribute("aria-expanded", "true");
+      const S = D.ej_solucion;
+      $("ej-solucion").innerHTML = '<div class="sol-modelo"><h3>Tres cambios, su porqué y cómo comprobarlos</h3><table class="t"><thead><tr><th>Cambio</th><th>Por qué</th><th>Cómo se comprueba</th></tr></thead><tbody>' +
+        S.cambios.map((c) => "<tr><td><b>" + esc(c[0]) + "</b></td><td>" + esc(c[1]) + "</td><td>" + esc(c[2]) + "</td></tr>").join("") + "</tbody></table>" +
+        "<p style=\"margin-top:.6rem\">" + esc(S.refuerzos) + "</p><h3>La alerta del sábado</h3><dl class=\"ficha\"><dt>Quién actúa</dt><dd>" + esc(S.alerta.quien) + "</dd><dt>Primera acción</dt><dd>" + esc(S.alerta.primera) +
+        "</dd><dt>Evidencia</dt><dd>" + esc(S.alerta.evidencia) + "</dd><dt>Después</dt><dd>" + esc(S.alerta.despues) + "</dd></dl><h3>Errores habituales</h3><ul style=\"margin-left:1.2rem\">" +
+        S.errores.map((e) => "<li>" + esc(e) + "</li>").join("") + "</ul></div>";
+    });
+    // temporizador
+    let restante = 480, tm = null, fin = null;
+    const mostrar = () => ($("ej-reloj").textContent = Math.floor(restante / 60) + ":" + String(restante % 60).padStart(2, "0"));
+    function actualizarReloj() {
+      restante = Math.max(0, Math.ceil((fin - Date.now()) / 1000));
+      mostrar();
+      if (!restante) { clearInterval(tm); tm = null; $("ej-pausa").textContent = "Finalizado"; $("ej-pausa").disabled = true; }
+    }
+    function iniciarReloj() {
+      clearInterval(tm);
+      fin = Date.now() + restante * 1000;
+      $("ej-pausa").textContent = "Pausa"; $("ej-pausa").disabled = false;
+      tm = setInterval(actualizarReloj, 250);
+    }
+    document.querySelectorAll("#p-ejercicio [data-min]").forEach((b) => b.addEventListener("click", () => {
+      restante = +b.dataset.min * 60; mostrar(); iniciarReloj();
+    }));
+    $("ej-pausa").addEventListener("click", () => {
+      if (tm) { actualizarReloj(); clearInterval(tm); tm = null; if (restante > 0) $("ej-pausa").textContent = "Seguir"; }
+      else if (restante > 0) iniciarReloj();
+    });
+    document.addEventListener("visibilitychange", () => { if (tm) actualizarReloj(); });
+  })();
+})();
+</script>
+</body>
+</html>

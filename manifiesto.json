@@ -1,0 +1,20 @@
+{
+  "generador": "preparar_publicacion.py",
+  "algoritmo": "SHA-256",
+  "archivos": {
+    "index.html": "b45cfd6352f418987a5a97fed6341a41cee9d69a4e4e5103c30b520bf0b01000",
+    "01_fundamentos_directrices.html": "9e8b0dbce1a50e3dae16fbd533734af906dbe14a142192c22d30d223853b6aec",
+    "02_almacenamiento_acceso.html": "8dc6ade44a9ed8b7c0b7a3e7941068fcacd5899267b1e62d3331fa46025c7436",
+    "01_fundamentos_lib.js": "34caf74abc625b3a7da518d25debd29af4b2a885fc788fe1b181f8a52d27040c",
+    "01_fundamentos_datos.js": "d765e44c117925649c2a6e53b858af862e5aa09f32f51a8828ed5e84a8a588b7",
+    "02_almacenamiento_lib.js": "e817b915aae3d4483cee5efb537b36b96150e4014c4f89d9ab4d325728b0ac4d",
+    "02_almacenamiento_datos.js": "b78b779e561df1c3acfdcc5b785d64bbd5bd7d7544f8355ef55d119700604c40",
+    "comun/clase.js": "4abc99d17f651f71a08e9276784a82ee7a7af6bf37a850b56bc864ee25b20806",
+    "comun/clase.css": "563b28375aadedefb03751450300cc7b5b7a131dd89047a776df5a8d2bc8c798",
+    "comun/portada.css": "d9658111ebdab2ee28bddf2803d2942857964d0fac0b46921e84b30ed6c20ff1",
+    "comun/icono.svg": "505f6ee85fb9f9c2c2c2416ee1a7032e3b1203cc87e40d7f55f35cc01a21230d",
+    "recursos/inyeccion_sqlite.py": "bddc6c0906c9352997506715ac3ae7d3b610ff5849a9e831dc001169ce720741",
+    "recursos/clientes_ficticios.csv": "acda9a1b98d82122142c1f71d7e79f77b51a1449b4f945920fe85807e97726f6",
+    ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

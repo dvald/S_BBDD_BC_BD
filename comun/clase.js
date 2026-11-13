@@ -99,6 +99,9 @@
   const temas = [
     { archivo: "01_fundamentos_directrices.html", titulo: "Fundamentos y directrices" },
     { archivo: "02_almacenamiento_acceso.html", titulo: "Almacenamiento y control de acceso" },
+    { archivo: "03_relacionales.html", titulo: "Hardening relacional y recuperación" },
+    { archivo: "04_distribuidas.html", titulo: "Catálogo distribuido y respuesta" },
+    { archivo: "05_criptografia.html", titulo: "Protección y ciclo de claves" },
   ];
   function navegacionCurso() {
     const actual = temas.findIndex((t) => location.pathname.endsWith("/" + t.archivo));

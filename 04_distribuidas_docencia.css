@@ -1,0 +1,58 @@
+/* Solo la lección nueva del Tema 4. No cambia las demos ya versionadas. */
+.docencia-t4{--acento:#087fa5;--acento-tab:#8bdcec}
+.docencia-t4 .content{max-width:1280px;padding:0 24px;margin:28px auto 50px}
+.docencia-t4 .header{padding:28px max(24px,calc((100vw - 1232px)/2));padding-right:max(240px,calc((100vw - 1232px)/2));background:#083b55}
+.docencia-t4 .header h1{font-size:1.8rem}.docencia-t4 .header p{max-width:850px;font-size:1rem}
+.docencia-t4 .card{padding:30px 34px;border-radius:4px;box-shadow:none;border-top:3px solid #bad7e2;margin-bottom:24px}
+.docencia-t4 .card h2{font-size:1.55rem;line-height:1.2;color:#006b90;margin-bottom:16px}
+.docencia-t4 .card h3{font-size:1.13rem;margin:18px 0 10px;color:#12485e}
+.docencia-t4 .card p{max-width:1000px;line-height:1.6;margin:10px 0 14px}
+.docencia-t4 .concepto{font-size:1.2rem;color:#173a4c!important;max-width:950px}
+.docencia-t4 .kicker{font-size:.72rem;color:#507080!important;text-transform:uppercase;letter-spacing:.1em;font-weight:750;margin:0 0 10px!important}
+.docencia-t4 .dos{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:start}
+.docencia-t4 .dos>*{min-width:0}.docencia-t4 .codigo{font-size:.88rem;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;background:#102e42;color:#e4f3fa;padding:22px;border-radius:5px;margin:15px 0}
+.docencia-t4 .cierre{padding:16px 20px;background:#e9f5f8;border-left:4px solid #087fa5;margin-top:20px;font-size:1.05rem;color:#17465a}
+.docencia-t4 .micro{font-size:.79rem;color:#526a77!important;line-height:1.5!important}
+.docencia-t4 .opciones{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+.docencia-t4 .opciones button{border:1px solid #94b5c7;background:#fff;padding:10px 16px;font:inherit;cursor:pointer;border-radius:4px}
+.docencia-t4 .opciones button[aria-pressed=true]{background:#006b90;color:#fff;border-color:#006b90}
+.docencia-t4 .seleccion{font-weight:700;font-size:1.1rem;color:#085571;margin:10px 0}
+.docencia-t4 .ejemplo{padding:22px;background:#f2f7fa;border:1px solid #c5dae4;min-width:0}
+.docencia-t4 .ejemplo h3{margin-top:0}.docencia-t4 .ruta{display:flex;align-items:center;justify-content:center;gap:12px;margin:24px 0;flex-wrap:wrap}
+.docencia-t4 .nodo{border:2px solid #84b4c7;background:#f1f8fb;padding:18px;text-align:center;flex:1;min-width:140px;max-width:280px}
+.docencia-t4 .nodo strong{display:block;font-size:1.05rem;color:#0b4a65}.docencia-t4 .nodo span{font-size:.85rem;display:block;margin-top:5px}
+.docencia-t4 .flecha{font-size:1.5rem;color:#367d97;font-weight:bold}
+.docencia-t4 .dato-json{font-size:1rem;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
+.docencia-t4 .documentos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
+.docencia-t4 .documento{border:1px solid #b5cbd7;padding:16px;background:white;min-width:0}
+.docencia-t4 .documento strong{font-size:1.15rem;display:block}.docencia-t4 .documento span{display:block;font-size:.85rem;margin-top:5px}
+.docencia-t4 .documento.elegido{border:3px solid #157452;background:#e8f6ed}.docencia-t4 .documento.privado{border-top:4px solid #bd6d12}
+.docencia-t4 .documento.elegido.privado{background:#fff1dc;border:3px solid #b2690d}
+.docencia-t4 .estado{font-size:1.15rem;font-weight:bold;margin:14px 0;padding:14px 18px;background:#e5f2f7;color:#064c6a}
+.docencia-t4 .etapas{display:flex;gap:0;margin:18px 0;list-style:none;counter-reset:paso;overflow-x:auto;padding:0}
+.docencia-t4 .etapas li{flex:1;min-width:130px;border-bottom:4px solid #cfdee6;padding:12px;font-size:.85rem;color:#57717f}
+.docencia-t4 .etapas li.actual{border-color:#0085af;background:#e7f4f9;font-weight:bold;color:#004d6d}
+.docencia-t4 .etapas li:before{counter-increment:paso;content:counter(paso)'. ';font-weight:bold}
+.docencia-t4 .etapa-texto{min-height:170px;padding:18px 22px;background:#f1f7fa;border-left:4px solid #0087b1}
+.docencia-t4 .etapa-texto h3{margin-top:0}.docencia-t4 .etapa-texto p{margin-bottom:5px}
+.docencia-t4 .pasos-ctrl{margin-top:14px}
+.docencia-t4 .tokens{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:20px 0}
+.docencia-t4 .tokens>*{padding:14px 18px;background:#edf5f9;border:1px solid #b9d1dd;overflow-wrap:anywhere;max-width:100%}
+.docencia-t4 .tres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:18px 0}
+.docencia-t4 .tres>div{border-left:3px solid #92c1d2;padding:12px 18px;background:#f3f8fb;min-width:0}
+.docencia-t4 .tres h3{margin:0 0 8px}.docencia-t4 .tres p{font-size:.92rem;margin:0}
+.docencia-t4 .sintesis{font-size:1.1rem;line-height:1.7}
+.docencia-t4 .sintesis li{margin:10px 0;padding-left:6px}
+.docencia-t4 details{padding:16px 20px;border:1px solid #bdd3df;margin:18px 0;background:#f7fbfd}
+.docencia-t4 summary{font-weight:700;cursor:pointer}.docencia-t4 details p,.docencia-t4 details li{font-size:.94rem}
+.docencia-t4 li{margin:10px 0}.docencia-t4 ul,.docencia-t4 ol{padding-left:1.4rem}
+.docencia-t4 .tabla-scroll{overflow-x:auto}.docencia-t4 table{border-collapse:collapse;width:100%;font-size:.9rem}
+.docencia-t4 th,.docencia-t4 td{text-align:left;padding:12px 14px;border-bottom:1px solid #ccdae1;vertical-align:top;overflow-wrap:anywhere}
+.docencia-t4 th{background:#e8f3f8;color:#164b63}.docencia-t4 .mecanismo{min-height:300px}
+.docencia-t4 code{overflow-wrap:anywhere}.docencia-t4 .compacto p{font-size:.95rem}
+.docencia-t4 footer{max-width:1250px;margin:30px auto;padding:0 28px 20px;font-size:.8rem;line-height:1.6}
+@media(max-width:800px){.docencia-t4 .dos,.docencia-t4 .tres{grid-template-columns:1fr}.docencia-t4 .content{padding:0 12px;margin-top:16px}.docencia-t4 .card{padding:22px 18px}.docencia-t4 .header{padding:26px 20px 90px}.docencia-t4 .documentos{grid-template-columns:1fr}.docencia-t4 .ruta{flex-direction:column;align-items:stretch}.docencia-t4 .nodo{max-width:none}.docencia-t4 .flecha{align-self:center;transform:rotate(90deg)}.docencia-t4 .tabs{padding:0 6px}.docencia-t4 .tab{padding:.6rem .5rem;font-size:.82rem}.docencia-t4 .card h2{font-size:1.35rem}.docencia-t4 .mecanismo{min-height:0}.docencia-t4 .codigo{padding:15px}.docencia-t4 .etapa-texto{padding:16px;min-height:0}}
+@media print{.docencia-t4 .panel{display:block!important;break-before:page}.docencia-t4 .panel:first-child{break-before:auto}.docencia-t4 .tabs,.docencia-t4 .clase-ctrl,.docencia-t4 .curso-nav,.docencia-t4 .opciones,.docencia-t4 .pasos-ctrl,.docencia-t4 .curso-secuencia{display:none}.docencia-t4 .card{break-inside:auto;border-top:1px solid #ccc;padding:20px 0}.docencia-t4 .content{max-width:none;margin:0;padding:0}.docencia-t4 .header{padding:10px;background:white;color:black}.docencia-t4 .header p{color:black}.docencia-t4 .dos{grid-template-columns:1fr 1fr}.docencia-t4 .documentos{grid-template-columns:repeat(3,1fr)}.docencia-t4 .codigo{background:#f5f5f5;color:black}.docencia-t4 .etapas{display:none}}
+/* Las escenas se muestran al instante para seguir la explicación y el mando. */
+.docencia-t4 .panel.active{animation:none}
+@media(max-width:800px){.docencia-t4 .header{padding-bottom:26px}}

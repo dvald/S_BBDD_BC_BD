@@ -1,0 +1,25 @@
+/* Extensiones acotadas a los problemas de los temas 3–5. */
+body[data-tema="5"]{--acento:#00897B;--acento-tab:#80CBC4}
+.encargo{border-top:5px solid var(--acento)}
+.encargo .resultado{font-size:1.08rem;font-weight:700;color:#174f7d}
+.ruta-problema{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem;margin:1rem 0}
+.ruta-problema>div,.paso-caso{padding:.85rem;border:1px solid #cbdce8;border-radius:10px;background:#f4f9fc;min-width:0}
+.ruta-problema b{display:block}.ruta-problema p{font-size:.87rem;margin:.25rem 0 0}
+.aportacion{border:1px solid #bad7e6;border-left:5px solid var(--acento);border-radius:8px;padding:.8rem 1rem;margin:1rem 0;background:#f4faff}
+.aportacion label{display:block;font-weight:700;margin-bottom:.4rem}.aportacion textarea{min-height:5rem;font-size:.92rem}
+.aportacion .small{margin-top:.45rem}.controles-modelo{display:flex;flex-wrap:wrap;gap:.6rem 1rem;margin:.8rem 0}
+.comparar{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.comparar>div{min-width:0;background:#f6f9fc;padding:1rem;border:1px solid var(--line);border-radius:10px}
+.comparar .term{font-size:.85rem}.metrica{font-size:1.12rem;font-weight:800;margin:.7rem 0}
+.glosario{margin:1rem 0;background:#f5f8fb;border:1px solid #d8e3eb;border-radius:9px;padding:.75rem 1rem}
+.glosario summary{font-weight:700;cursor:pointer}.glosario dl{display:grid;grid-template-columns:minmax(140px,210px) 1fr;gap:.6rem 1rem;margin-top:.7rem}.glosario dt{font-weight:750}.glosario dd{margin:0}
+.caso-matriz{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem;margin:1rem 0}.caso-matriz>div{padding:1rem;border:1px solid #bed4e2;border-radius:10px;background:#f6fbfe;text-align:center}
+pre.codigo{background:#152f43;color:#e6f3ff;padding:1rem;border-radius:9px;font-size:.83rem;overflow:auto;white-space:pre;max-width:100%}
+.vista-portfolio{font-size:.82rem;max-height:28rem;overflow:auto;white-space:pre-wrap;background:#f1f7fa;padding:1rem;border:1px solid #ccdce6;border-radius:9px;overflow-wrap:anywhere}
+.portfolio-aviso{min-height:1.5rem;font-size:.88rem;color:#275977}.entrada-archivo{font-size:.85rem;max-width:100%}
+input[type=number]{font:inherit;padding:.4rem;border:1px solid #b4cbdc;border-radius:6px;width:8rem;max-width:100%}
+.card li{margin:.4rem 0}.lista{padding-left:1.3rem}.card details.solution{margin:.8rem 0;border:1px solid #c8dce9;border-radius:8px;padding:.7rem 1rem;background:#f4faff}.solution summary{cursor:pointer;font-weight:700}
+.portfolio-exportar{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}
+.portfolio-exportar>*{max-width:100%;min-width:0}
+@media(max-width:1000px){.ruta-problema{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.comparar,.caso-matriz,.ruta-problema{grid-template-columns:1fr}.glosario dl{grid-template-columns:1fr;gap:.2rem}.glosario dd{margin-bottom:.7rem}.curso-temas{flex-wrap:wrap}.controles-modelo{display:block}.controles-modelo label{margin:.5rem 0;display:block}.aportacion{padding:.75rem}}
+@media print{.panel{display:block!important;break-before:page}.panel:first-child{break-before:auto}.tabs,.portfolio-exportar{display:none}.card{box-shadow:none}.vista-portfolio{max-height:none}.aportacion{break-inside:avoid}.comparar{grid-template-columns:1fr 1fr}}

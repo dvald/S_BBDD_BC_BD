@@ -41,6 +41,11 @@ h2 { font-size:clamp(1.7rem,2.4vw,2.25rem); line-height:1.2; letter-spacing:-.03
 .temas { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1.5rem; }
 .tema { display:flex; flex-direction:column; background:#fff; padding:1.6rem 1.8rem 0; border:1px solid var(--linea); border-top:3px solid #267ab1; border-radius:7px; }
 .tema-dos { border-top-color:#00897b; }
+.tema-cinco { border-top-color:#00897b; }
+.experiencia { padding:1.5rem; border:1px solid #cedde8; border-left:5px solid #1787ad; border-radius:12px; background:#f5fbfe; color:#1c3d54; }
+.experiencia h3 { font-size:1.2rem; line-height:1.3; margin-bottom:.7rem; }
+.experiencia p { margin:.6rem 0; line-height:1.6; }
+.portfolio-nota { margin-top:1.3rem; line-height:1.7; color:#435b70; max-width:68rem; }
 .tema-arriba { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
 .numero { font-size:2.6rem; letter-spacing:-.06em; line-height:1; color:#215d91; }
 .tema-dos .numero { color:#087b71; }

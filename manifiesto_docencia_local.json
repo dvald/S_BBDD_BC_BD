@@ -1,0 +1,33 @@
+{
+  "fecha": "2026-11-13",
+  "alcance": "Revisión local formativa de las lecciones 3 y 4. Sin commit ni push.",
+  "algoritmo": "SHA-256",
+  "precedencia": "Este registro sustituye las entradas de 03_relacionales.html y 04_distribuidas.html del manifiesto anterior para la copia local. Los demás archivos mantienen el manifiesto previo.",
+  "archivos": {
+    "03_relacionales.html": "92fadbb906772b3087f6bd2aeffa5a981fface456ca3250000a21735a78f9be3",
+    "03_relacionales_docencia.js": "0e532e8054dfa8339a5c2c7304e3c832199588add5754fb955d34264a737aa40",
+    "03_relacionales_docencia.css": "fcccd4b5361a71f95de6f112bf244ace69f2ef1d9a07e59c756fce9c9cca076b",
+    "04_distribuidas.html": "26d3b1e4245aa8481ac24f34b04d0714c37f6f85c083c6e2a76a780c08fe3015",
+    "04_distribuidas_docencia.js": "f87158c0418c85e2ca7c3190a8a461c8b334a6693b8362419af4bc551b84e462",
+    "04_distribuidas_docencia.css": "d0a181a0787b3c35e5d54b6abb0b4bdb72cfbb8333cedb1c994fb2a1d034426e"
+  },
+  "archivos_versionados_conservados": {
+    "comun/portada.css": "732f885399c9bd9e4f4163bd60d8c2fa2a8a7e01899e60db90385529e3149bbd",
+    "02_almacenamiento_datos.js": "b78b779e561df1c3acfdcc5b785d64bbd5bd7d7544f8355ef55d119700604c40",
+    "recursos/inyeccion_sqlite.py": "bddc6c0906c9352997506715ac3ae7d3b610ff5849a9e831dc001169ce720741",
+    "comun/icono.svg": "505f6ee85fb9f9c2c2c2416ee1a7032e3b1203cc87e40d7f55f35cc01a21230d",
+    "02_almacenamiento_lib.js": "e817b915aae3d4483cee5efb537b36b96150e4014c4f89d9ab4d325728b0ac4d",
+    "manifiesto.json": "0740897724f159ea9ff0ec5bc4acf36a7bf9c7bad625680474965ea5594d001a",
+    "index.html": "21e2fd91bebcc4bfa284d45ccfa8f7432a4d0330463346e6c1d0119cdb592bef",
+    "comun/clase.css": "03f5606a0836bfa6ed7691fbb1347ca8bbf846c82a207ad9a2a8cb22ee3a1dea",
+    "recursos/clientes_ficticios.csv": "acda9a1b98d82122142c1f71d7e79f77b51a1449b4f945920fe85807e97726f6",
+    ".gitignore": "32b2dd7912ea54e02bcb2d85d94ee2a1fe0e74675f20bbbabeb7823055acb249",
+    "01_fundamentos_datos.js": "d765e44c117925649c2a6e53b858af862e5aa09f32f51a8828ed5e84a8a588b7",
+    "02_almacenamiento_acceso.html": "8dc6ade44a9ed8b7c0b7a3e7941068fcacd5899267b1e62d3331fa46025c7436",
+    ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "01_fundamentos_lib.js": "34caf74abc625b3a7da518d25debd29af4b2a885fc788fe1b181f8a52d27040c",
+    "comun/clase.js": "0f8e408db12c0bc5ea21fd9fe6eee1d661032211b3d517b0908a46da2de1c2c3",
+    "01_fundamentos_directrices.html": "9e8b0dbce1a50e3dae16fbd533734af906dbe14a142192c22d30d223853b6aec",
+    "README.md": "f266d5f0f1642b78ec80b69c8c357932c60495a2611653e9ade8df6d7b2f42e5"
+  }
+}

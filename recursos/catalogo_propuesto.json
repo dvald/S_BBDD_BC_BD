@@ -1,0 +1,13 @@
+{
+  "nombre": "catalogo-cd",
+  "replicas": 3,
+  "validacion_estricta": true,
+  "puerto_publico": false,
+  "autenticacion": true,
+  "tls_clientes": true,
+  "tls_miembros": true,
+  "secretos": "referencia_externa",
+  "red_restringida": true,
+  "imagen_fijada": true,
+  "copia_aislada": true
+}

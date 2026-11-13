@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Demos de Seguridad en Bases de Datos, Blockchain y Big Data, del Grado en Ciberseguridad de UNIR. Explora fundamentos, directrices y seguridad del almacenamiento con el caso CosechaDirecta.">
+  <meta name="description" content="Demos de seguridad del dato con CosechaDirecta: fundamentos, almacenamiento, bases relacionales, catálogo distribuido y criptografía. Problemas y evidencias para dos experiencias de portfolio.">
   <meta name="theme-color" content="#101c30">
   <title>Seguridad en Bases de Datos, Blockchain y Big Data · Demos</title>
   <link rel="icon" href="comun/icono.svg" type="image/svg+xml">
@@ -13,7 +13,7 @@
   <a class="saltar" href="#demos">Saltar a las demos</a>
   <header class="cabecera">
     <div class="marca"><img src="comun/icono.svg" width="36" height="36" alt=""><span>UNIR <span class="separador">/</span> Grado en Ciberseguridad</span></div>
-    <nav aria-label="Navegación de la portada"><a href="#demos">Demos</a><a href="#recorrido">La asignatura</a><a href="#uso">Cómo explorar</a></nav>
+    <nav aria-label="Navegación de la portada"><a href="#demos">Demos</a><a href="#portfolio">Problemas y portfolio</a><a href="#recorrido">La asignatura</a><a href="#uso">Cómo explorar</a></nav>
   </header>
   <main>
     <section class="hero" aria-labelledby="titulo">
@@ -23,7 +23,7 @@
         <p class="entradilla">Entender el riesgo. Elegir el control.<br>Comprobar qué cambia.</p>
         <p class="intro">Del acceso a un dato a la confianza en un sistema distribuido. Explora casos, cambia decisiones y observa sus consecuencias.</p>
         <div class="acciones"><a class="boton" href="01_fundamentos_directrices.html">Empezar por el tema 1 <span aria-hidden="true">↗</span></a><a class="enlace-claro" href="#demos">Ver las demos <span aria-hidden="true">↓</span></a></div>
-        <p class="hero-nota">2 temas disponibles <span aria-hidden="true">·</span> 12 apartados interactivos <span aria-hidden="true">·</span> Datos ficticios</p>
+        <p class="hero-nota">5 temas disponibles <span aria-hidden="true">·</span> 28 apartados <span aria-hidden="true">·</span> Datos ficticios</p>
       </div>
       <figure class="cadena">
         <div class="cadena-cab"><span class="punto"></span> El dato deja huella <span class="mono">01 — 03</span></div>
@@ -59,7 +59,7 @@
     </section>
 
     <section class="zona demos" id="demos" aria-labelledby="demos-titulo">
-      <div class="titulo-seccion"><div><p class="eyebrow">Explorar y comprobar</p><h2 id="demos-titulo">Las demos de la asignatura</h2></div><p>Un caso común: <strong>CosechaDirecta</strong>.<br>Dos formas de mirar la seguridad del dato.</p></div>
+      <div class="titulo-seccion"><div><p class="eyebrow">Explorar y comprobar</p><h2 id="demos-titulo">Las demos de la asignatura</h2></div><p>Un caso común: <strong>CosechaDirecta</strong>.<br>Decisiones, pruebas y evidencias conectadas.</p></div>
       <div class="temas">
         <article class="tema">
           <div class="tema-arriba"><span class="numero">01</span><span class="disponible">Demo disponible</span></div>
@@ -91,15 +91,64 @@
           </ol>
           <a class="abrir" href="02_almacenamiento_acceso.html">Abrir tema 2 <span aria-hidden="true">→</span></a>
         </article>
+        <article class="tema">
+          <div class="tema-arriba"><span class="numero">03</span><span class="disponible">Demo disponible</span></div>
+          <p class="tema-etiqueta">Bases de datos relacionales</p>
+          <h3><a href="03_relacionales.html">¿Por qué salen datos ajenos si la base está cifrada?</a></h3>
+          <p>Corrige el alcance de permisos y consultas. Contrasta pruebas y recuperación para construir las secciones del informe de hardening.</p>
+          <ol class="apartados" aria-label="Apartados del tema 3">
+            <li><a href="03_relacionales.html#caso"><span>01</span>El encargo ↗</a></li>
+            <li><a href="03_relacionales.html#permisos"><span>02</span>Permisos ↗</a></li>
+            <li><a href="03_relacionales.html#inyeccion"><span>03</span>Consulta y pruebas ↗</a></li>
+            <li><a href="03_relacionales.html#cifrado"><span>04</span>TDE y máscaras ↗</a></li>
+            <li><a href="03_relacionales.html#recuperacion"><span>05</span>Recuperación ↗</a></li>
+            <li><a href="03_relacionales.html#informe"><span>06</span>Informe y decisión ↗</a></li>
+          </ol><a class="abrir" href="03_relacionales.html">Abrir tema 3 →</a>
+        </article>
+        <article class="tema">
+          <div class="tema-arriba"><span class="numero">04</span><span class="disponible">Demo disponible</span></div>
+          <p class="tema-etiqueta">NoSQL y escenarios distribuidos</p>
+          <h3><a href="04_distribuidas.html">¿Qué ruta sigue exponiendo el catálogo?</a></h3>
+          <p>Revisa las rutas, el plan automatizable y la confianza entre miembros. Redacta la respuesta a una credencial filtrada.</p>
+          <ol class="apartados" aria-label="Apartados del tema 4">
+            <li><a href="04_distribuidas.html#caso"><span>01</span>El encargo ↗</a></li>
+            <li><a href="04_distribuidas.html#rutas"><span>02</span>Rutas y consulta ↗</a></li>
+            <li><a href="04_distribuidas.html#configuracion"><span>03</span>Plan y comprobación ↗</a></li>
+            <li><a href="04_distribuidas.html#rotacion"><span>04</span>Miembros y claves ↗</a></li>
+            <li><a href="04_distribuidas.html#runbook"><span>05</span>Respuesta y evidencia ↗</a></li>
+          </ol><a class="abrir" href="04_distribuidas.html">Abrir tema 4 →</a>
+        </article>
+        <article class="tema tema-cinco">
+          <div class="tema-arriba"><span class="numero">05</span><span class="disponible">Demo disponible</span></div>
+          <p class="tema-etiqueta">Protección criptográfica y claves</p>
+          <h3><a href="05_criptografia.html">¿Podremos recuperar la copia después de rotar claves?</a></h3>
+          <p>Prueba cifrado autenticado, identifica al destino y revisa la custodia. Completa las dependencias de claves de las dos experiencias.</p>
+          <ol class="apartados" aria-label="Apartados del tema 5">
+            <li><a href="05_criptografia.html#caso"><span>01</span>El encargo ↗</a></li>
+            <li><a href="05_criptografia.html#mecanismos"><span>02</span>Mecanismo y prueba ↗</a></li>
+            <li><a href="05_criptografia.html#claves"><span>03</span>Ciclo de claves ↗</a></li>
+            <li><a href="05_criptografia.html#identidad"><span>04</span>Destino y canal ↗</a></li>
+            <li><a href="05_criptografia.html#evidencia"><span>05</span>Decisión y evidencia ↗</a></li>
+          </ol><a class="abrir" href="05_criptografia.html">Abrir tema 5 →</a>
+        </article>
       </div>
+    </section>
+
+    <section class="zona portfolio" id="portfolio" aria-labelledby="portfolio-titulo">
+      <div class="titulo-seccion"><div><p class="eyebrow">Tres problemas · dos experiencias</p><h2 id="portfolio-titulo">Aprender construyendo una decisión comprobable</h2></div><p>Resuelve, revisa con otra persona<br>y conserva la evidencia que sostiene tu propuesta.</p></div>
+      <div class="temas">
+        <article class="experiencia"><h3>1. Informe de hardening relacional</h3><p>Inyección SQL, alcance de TDE, recuperación y métricas ejecutivas. El <a href="03_relacionales.html#caso">tema 3</a> aporta controles y pruebas; el <a href="05_criptografia.html#claves">tema 5</a>, custodia y dependencia de claves.</p><p>Resultado: informe con decisión, pruebas, métricas y límites. Conserva qué es supuesto, modelo o ejecución.</p></article>
+        <article class="experiencia"><h3>2. Despliegue distribuido, secretos y respuesta</h3><p>El <a href="04_distribuidas.html#caso">tema 4</a> aporta rutas, revisión de un plan y runbook; el <a href="05_criptografia.html#caso">tema 5</a>, identidad y ciclo de claves.</p><p>Resultado de estas demos: diseño revisado y pruebas acotadas. Para acreditar despliegue automatizado se necesita ejecutar y verificar el entorno elegido.</p></article>
+      </div>
+      <p class="portfolio-nota">Cada apartado deja una aportación al informe común. Puedes exportarlo como Markdown y continuar mediante JSON. La revisión entre compañeros añade una objeción y una prueba. Estas experiencias no crean una entrega evaluable adicional ni sustituyen las actividades oficiales.</p>
     </section>
 
     <section class="recorrido" id="recorrido" aria-labelledby="recorrido-titulo">
       <div class="zona">
-        <div class="titulo-seccion"><div><p class="eyebrow">La visión completa</p><h2 id="recorrido-titulo">Del dato al sistema distribuido</h2></div><p>Cuatro bloques conectan los diez temas.<br>Por ahora puedes explorar las demos de los temas 1 y 2.</p></div>
+        <div class="titulo-seccion"><div><p class="eyebrow">La visión completa</p><h2 id="recorrido-titulo">Del dato al sistema distribuido</h2></div><p>Cuatro bloques conectan los diez temas.<br>Disponibles las demos de los temas 1 a 5.</p></div>
         <ol class="bloques">
-          <li><span class="rango">Temas 1–4</span><h3>Datos y almacenamiento</h3><p>Fundamentos, marco normativo, arquitectura y seguridad en bases de datos relacionales y NoSQL.</p><span class="situacion">Demos de los temas 1 y 2 disponibles</span></li>
-          <li class="cripto"><span class="rango">Tema 5</span><h3>Criptografía</h3><p>Mecanismos para proteger la información en tránsito y en reposo, y gestionar sus claves.</p><span class="situacion">Sin demo todavía</span></li>
+          <li><span class="rango">Temas 1–4</span><h3>Datos y almacenamiento</h3><p>Fundamentos, marco normativo, arquitectura y seguridad en bases de datos relacionales y NoSQL.</p><span class="situacion">Demos de los temas 1 a 4 disponibles</span></li>
+          <li class="cripto"><span class="rango">Tema 5</span><h3>Criptografía</h3><p>Mecanismos para proteger la información en tránsito y en reposo, y gestionar sus claves.</p><span class="situacion">Demo disponible</span></li>
           <li class="blockchain"><span class="rango">Temas 6–8</span><h3>Blockchain</h3><p>Bloques, consenso, vulnerabilidades y seguridad de los contratos inteligentes.</p><span class="situacion">Sin demo todavía</span></li>
           <li class="bigdata"><span class="rango">Temas 9–10</span><h3>Big Data</h3><p>Riesgos de las arquitecturas de datos, privacidad y cumplimiento en su tratamiento.</p><span class="situacion">Sin demo todavía</span></li>
         </ol>
